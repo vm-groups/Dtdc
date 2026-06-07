@@ -28,6 +28,11 @@ body{
     border-bottom:1px solid #e5e5e5;
     font-size:20px;
     font-weight:bold;
+
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
 }
 
 .container{
@@ -80,32 +85,27 @@ body{
 
 .menu-btn span{
     font-size:13px;
-    text-align:center;
 }
 
 .summary{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin-top:35px;
+    text-align:center;
+    margin-top:30px;
 }
 
 .row{
     display:flex;
     justify-content:space-between;
-    align-items:center;
     padding:14px 0;
-    border-bottom:1px solid #f0f0f0;
+    border-bottom:1px solid #eee;
 }
 
 .left{
     display:flex;
     flex-direction:column;
-    gap:4px;
 }
 
 .title{
-    font-size:18px;
+    font-size:16px;
 }
 
 .mode{
@@ -114,7 +114,7 @@ body{
 }
 
 .amount{
-    font-size:18px;
+    font-size:16px;
     font-weight:bold;
 }
 
@@ -122,77 +122,93 @@ body{
     text-align:center;
     font-size:38px;
     font-weight:bold;
-    margin-top:10px;
-    margin-bottom:20px;
+    margin:10px 0 20px;
 }
 
 .no-data{
     text-align:center;
-    padding:50px 0;
-    color:#888;
-    font-size:18px;
+    padding:40px;
+    color:#777;
+}
+
+.summary-box{
+    margin-top:25px;
+    border-top:1px solid #ddd;
+    padding-top:15px;
+}
+
+.summary-title{
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+}
+
+.grand-row{
+    display:flex;
+    justify-content:space-between;
+    padding-top:10px;
+    margin-top:10px;
+    border-top:1px solid #ddd;
+    font-weight:bold;
 }
 
 </style>
 </head>
+
 <body>
 
-<div class="navbar">
-    VM Pay
-</div>
+<div class="navbar">VM Pay</div>
 
 <div class="container">
 
-    <div class="search-box">
-        <input type="date" id="dateInput">
-        <button class="search-btn" onclick="saveDate()">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    </div>
+<div class="search-box">
+    <input type="date" id="dateInput">
+    <button class="search-btn" onclick="saveDate()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+</div>
 
-    <div class="menu-grid">
+<div class="menu-grid">
 
-        <button class="menu-btn" onclick="window.location.href='add_entries.html'">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add Entry</span>
-        </button>
+    <button class="menu-btn"onclick="window.location.href='add_entries.html'">
+        <i class="fa-solid fa-plus"></i>
+        <span>Add Entry</span>
+    </button>
 
-        <button class="menu-btn" onclick="window.location.href='Credit_list.html'">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-            <span>Credit List</span>
-        </button>
+    <button class="menu-btn" onclick="window.location.href='Credit_list.html'">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span>Credit List</span>
+    </button>
 
-        <button class="menu-btn" onclick="window.location.href='View_Sorted.html'">
-            <i class="fa-solid fa-chart-column"></i>
-            <span>View Report</span>
-        </button>
+    <button class="menu-btn" onclick="window.location.href='View_Sorted.html'">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>View Report</span>
+    </button>
 
-        <button class="menu-btn" onclick="window.location.href='Profit.html'">
-            <i class="fa-solid fa-indian-rupee-sign"></i>
-            <span>Profit</span>
-        </button>
-
-    </div>
-
-    <div class="summary">
-        <span id="todayDate" style="font-size:26px;">--</span>
-    </div>
-
-    <div class="fixed-total">
-        ₹511
-    </div>
-
-    <div id="content"></div>
+    <button class="menu-btn" onclick="window.location.href='Profit.html'">
+        <i class="fa-solid fa-indian-rupee-sign"></i>
+        <span>Profit</span>
+    </button>
 
 </div>
 
+<div class="summary">
+    <span id="todayDate">--</span>
+</div>
+
+<div class="fixed-total" id="grandTotal">₹0</div>
+
+<div id="content"></div>
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-
-import { getDatabase, ref, onValue }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
@@ -208,135 +224,116 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const today = new Date().toISOString().split("T")[0];
-
 document.getElementById("todayDate").innerText = today;
 
 const content = document.getElementById("content");
 
 let totalEntries = 0;
-let incomeLoaded = false;
-let expenseLoaded = false;
+
+let cashTotal = 0;
+let upiTotal = 0;
+let creditTotal = 0;
+let expenseTotal = 0;
+let incomeTotal = 0;
+function resetTotals(){
+    cashTotal = 0;
+    upiTotal = 0;
+    creditTotal = 0;
+    expenseTotal = 0;
+    incomeTotal = 0;
+    totalEntries = 0;
+    content.innerHTML = "";
+}
 
 function addRow(data, type){
+
+    if(!data || !data.amount) return;
+
+    const amount = Number(data.amount);
+    if(isNaN(amount)) return;
 
     totalEntries++;
 
     const row = document.createElement("div");
-
     row.className = "row";
 
     const sign = type === "income" ? "+" : "-";
+    const modeText = type === "income" ? "Income" : "Expense";
 
-    const modeText =
-    type === "income"
-    ? "Income"
-    : "Expense";
-
-    const title =
-    type === "income"
-    ? data.method
-    : data.note;
+    const title = type === "income"
+        ? (data.method || "Income")
+        : (data.note || "Expense");
 
     row.innerHTML = `
         <div class="left">
-            <div class="title">${title || "N/A"}</div>
+            <div class="title">${title}</div>
             <div class="mode">${modeText}</div>
         </div>
 
         <div class="amount">
-            ${sign} ₹${data.amount}
+            ${sign} ₹${amount}
         </div>
     `;
 
     content.appendChild(row);
-}
-function checkNoEntries(){
 
-    if(
-        incomeLoaded &&
-        expenseLoaded &&
-        totalEntries === 0
-    ){
+    if(type === "income"){
+        incomeTotal += amount;
 
-        content.innerHTML = `
-            <div class="no-data">
-                No Entries Found
-            </div>
-        `;
+        if(data.method === "Cash") cashTotal += amount;
+        else if(data.method === "UPI") upiTotal += amount;
+        else if(data.method === "Credit") creditTotal += amount;
+
+    } else {
+        expenseTotal += amount;
     }
+
+    updateSummary();
 }
 
-const incomeRef = ref(
-    db,
-    "incomes/" + today
-);
+// INCOME
+const incomeRef = ref(db, "incomes/" + today);
 
-onValue(incomeRef,(snapshot)=>{
+onValue(incomeRef, (snapshot) => {
 
-    snapshot.forEach((child)=>{
+    resetTotals();
 
-        addRow(
-            child.val(),
-            "income"
-        );
-
+    snapshot.forEach((child) => {
+        addRow(child.val(), "income");
     });
 
-    incomeLoaded = true;
-
-    checkNoEntries();
-
+    updateSummary();
 });
 
-const expenseRef = ref(
-    db,
-    "expenses/" + today
-);
+// EXPENSE
+const expenseRef = ref(db, "expenses/" + today);
 
-onValue(expenseRef,(snapshot)=>{
+onValue(expenseRef, (snapshot) => {
 
-    snapshot.forEach((child)=>{
-
-        addRow(
-            child.val(),
-            "expense"
-        );
-
+    snapshot.forEach((child) => {
+        addRow(child.val(), "expense");
     });
 
-    expenseLoaded = true;
-
-    checkNoEntries();
-
+    updateSummary();
 });
+function updateSummary(){
 
-</script>
+    const profit = incomeTotal - expenseTotal;
 
-<script>
+    document.getElementById("grandTotal").innerText = "+ ₹" + profit;
+}
 
-function saveDate(){
+window.saveDate = function(){
 
-    const date =
-    document.getElementById(
-        "dateInput"
-    ).value;
+    const date = document.getElementById("dateInput").value;
 
     if(!date){
-
-        alert(
-            "Select a date"
-        );
-
+        alert("Select a date");
         return;
     }
 
-    localStorage.setItem(
-        "date",
-        date
-    );
-
-    window.location.href =
-    "Search.html";
+    localStorage.setItem("date", date);
+    window.location.href = "Search.html";
 }
 
 </script>
