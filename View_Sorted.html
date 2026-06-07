@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Selection</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#fff;
+    color:#000;
+    padding:16px;
+}
+
+.navbar{
+    height:55px;
+    border-bottom:1px solid #000;
+    display:flex;
+    align-items:center;
+    position:relative;
+    margin-bottom:35px;
+}
+
+.back-btn{
+    width:40px;
+    height:40px;
+    border:1px solid #000;
+    border-radius:50%;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+}
+
+.nav-title{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:24px;
+    white-space:nowrap;
+}
+
+.selection-row{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:20px;
+}
+
+.pill-btn{
+    background:none;
+    border:1px solid #000;
+    border-radius:30px;
+    padding:8px 24px;
+    font-size:22px;
+    cursor:pointer;
+    min-width:110px;
+}
+
+.overlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#fff;
+    z-index:1000;
+    padding:25px;
+}
+
+.overlay-header{
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:30px;
+}
+
+.options-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:40px;
+}
+
+.option-item{
+    border:1px solid #000;
+    border-radius:20px;
+    padding:12px;
+    text-align:center;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.option-item.selected{
+    background:#000;
+    color:#fff;
+}
+
+.overlay-footer{
+    display:flex;
+    justify-content:center;
+}
+
+.next-btn{
+    width:130px;
+    height:55px;
+    border:1px solid #000;
+    border-radius:30px;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <button class="back-btn" onclick="window.location.href='index.html'">&larr;</button>
+    <div class="nav-title">Report of</div>
+</div>
+
+<div class="selection-row">
+    <button class="pill-btn" id="monthBtn">Month</button>
+    <button class="pill-btn" id="yearBtn">Year</button>
+</div>
+
+<!-- Month Selection -->
+<div class="overlay" id="monthOverlay">
+    <div class="overlay-header">Select Month</div>
+
+    <div class="options-grid" id="monthOptions"></div>
+
+    <div class="overlay-footer">
+        <button class="next-btn" id="monthNextBtn">Next</button>
+    </div>
+</div>
+
+<!-- Year Selection -->
+<div class="overlay" id="yearOverlay">
+    <div class="overlay-header">Select Year</div>
+
+    <div class="options-grid" id="yearOptions"></div>
+
+    <div class="overlay-footer">
+        <button class="next-btn" id="yearNextBtn">Next</button>
+    </div>
+</div>
+
+<script>
+
+const months = [
+    "Jan","Feb","Mar",
+    "Apr","May","Jun",
+    "Jul","Aug","Sep",
+    "Oct","Nov","Dec"
+];
+
+const years = [
+    "2024","2025","2026",
+    "2027","2028","2029",
+    "2030"
+];
+
+let selectedMonth = "";
+let selectedYear = "";
+let reportType = "";
+
+const monthBtn = document.getElementById("monthBtn");
+const yearBtn = document.getElementById("yearBtn");
+
+const monthOverlay = document.getElementById("monthOverlay");
+const yearOverlay = document.getElementById("yearOverlay");
+
+const monthOptions = document.getElementById("monthOptions");
+const yearOptions = document.getElementById("yearOptions");
+
+const monthNextBtn = document.getElementById("monthNextBtn");
+const yearNextBtn = document.getElementById("yearNextBtn");
+
+function renderMonths(){
+    monthOptions.innerHTML = "";
+
+    months.forEach(month => {
+
+        const div = document.createElement("div");
+        div.className = "option-item";
+        div.textContent = month;
+
+        div.onclick = () => {
+
+            monthOptions
+                .querySelectorAll(".option-item")
+                .forEach(item => item.classList.remove("selected"));
+
+            div.classList.add("selected");
+            selectedMonth = month;
+        };
+
+        monthOptions.appendChild(div);
+    });
+}
+
+function renderYears(){
+    yearOptions.innerHTML = "";
+
+    years.forEach(year => {
+
+        const div = document.createElement("div");
+        div.className = "option-item";
+        div.textContent = year;
+
+        div.onclick = () => {
+
+            yearOptions
+                .querySelectorAll(".option-item")
+                .forEach(item => item.classList.remove("selected"));
+
+            div.classList.add("selected");
+            selectedYear = year;
+        };
+
+        yearOptions.appendChild(div);
+    });
+}
+
+renderMonths();
+renderYears();
+
+monthBtn.onclick = () => {
+
+    reportType = "month";
+
+    selectedMonth = "";
+    selectedYear = "";
+
+    monthOptions
+        .querySelectorAll(".option-item")
+        .forEach(item => item.classList.remove("selected"));
+
+    yearOptions
+        .querySelectorAll(".option-item")
+        .forEach(item => item.classList.remove("selected"));
+
+    monthOverlay.style.display = "block";
+};
+
+yearBtn.onclick = () => {
+
+    reportType = "year";
+
+    selectedYear = "";
+
+    yearOptions
+        .querySelectorAll(".option-item")
+        .forEach(item => item.classList.remove("selected"));
+
+    yearOverlay.style.display = "block";
+};
+
+monthNextBtn.onclick = () => {
+
+    if(selectedMonth === ""){
+        alert("Please select a month");
+        return;
+    }
+
+    monthOverlay.style.display = "none";
+    yearOverlay.style.display = "block";
+};
+
+yearNextBtn.onclick = () => {
+
+    if(selectedYear === ""){
+        alert("Please select a year");
+        return;
+    }
+
+    if(reportType === "month"){
+
+        const report = selectedMonth + "/" + selectedYear;
+
+        localStorage.setItem("report", report);
+        localStorage.setItem("reportType", "month");
+
+    }else{
+
+        localStorage.setItem("report", selectedYear);
+        localStorage.setItem("reportType", "year");
+    }
+
+    window.location.href = "review.html";
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DTDC Tracker</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    padding:20px;
+}
+
+input{
+    width:100%;
+    height:50px;
+    padding:0 15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+button{
+    width:100%;
+    height:50px;
+    border:none;
+    background:#000;
+    color:#fff;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<input id="tracking" placeholder="Enter DTDC Tracking Number">
+
+<button onclick="trackParcel()">Track Parcel</button>
+
+<script>
+function trackParcel(){
+
+    const id = document.getElementById("tracking").value.trim();
+
+    if(!id){
+        alert("Enter Tracking Number");
+        return;
+    }
+
+    window.open(
+        "https://www.dtdc.in/tracking/tracking_results.asp?Ttype=awb_no&strCnno=" + id,
+        "_blank"
+    );
+}
+</script>
+
+</body>
+</html>

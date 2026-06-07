@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VM Pay</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#fff;
+}
+
+.navbar{
+    height:55px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-bottom:1px solid #e5e5e5;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    padding:15px;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.search-box input{
+    flex:1;
+    height:45px;
+    border:1px solid #ccc;
+    border-radius:25px;
+    padding:0 15px;
+    outline:none;
+}
+
+.search-btn{
+    width:50px;
+    border:none;
+    background:none;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    margin-top:35px;
+}
+
+.menu-btn{
+    border:none;
+    background:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+}
+
+.menu-btn i{
+    font-size:28px;
+}
+
+.menu-btn span{
+    font-size:13px;
+    text-align:center;
+}
+
+.summary{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:35px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #f0f0f0;
+}
+
+.left{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.title{
+    font-size:18px;
+}
+
+.mode{
+    font-size:12px;
+    color:#666;
+}
+
+.amount{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.fixed-total{
+    text-align:center;
+    font-size:38px;
+    font-weight:bold;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+.no-data{
+    text-align:center;
+    padding:50px 0;
+    color:#888;
+    font-size:18px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    VM Pay
+</div>
+
+<div class="container">
+
+    <div class="search-box">
+        <input type="date" id="dateInput">
+        <button class="search-btn" onclick="saveDate()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+
+    <div class="menu-grid">
+
+        <button class="menu-btn" onclick="window.location.href='add_entries.html'">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Entry</span>
+        </button>
+
+        <button class="menu-btn" onclick="window.location.href='Credit_list.html'">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>Credit List</span>
+        </button>
+
+        <button class="menu-btn" onclick="window.location.href='View_Sorted.html'">
+            <i class="fa-solid fa-chart-column"></i>
+            <span>View Report</span>
+        </button>
+
+        <button class="menu-btn" onclick="window.location.href='Profit.html'">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            <span>Profit</span>
+        </button>
+
+    </div>
+
+    <div class="summary">
+        <span id="todayDate" style="font-size:26px;">--</span>
+    </div>
+
+    <div class="fixed-total">
+        ₹511
+    </div>
+
+    <div id="content"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import { getDatabase, ref, onValue }
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
+  authDomain: "site-2a9d6.firebaseapp.com",
+  databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
+  projectId: "site-2a9d6",
+  storageBucket: "site-2a9d6.firebasestorage.app",
+  messagingSenderId: "1060812483121",
+  appId: "1:1060812483121:web:d2b173d180071145810310"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const today = new Date().toISOString().split("T")[0];
+
+document.getElementById("todayDate").innerText = today;
+
+const content = document.getElementById("content");
+
+let totalEntries = 0;
+let incomeLoaded = false;
+let expenseLoaded = false;
+
+function addRow(data, type){
+
+    totalEntries++;
+
+    const row = document.createElement("div");
+
+    row.className = "row";
+
+    const sign = type === "income" ? "+" : "-";
+
+    const modeText =
+    type === "income"
+    ? "Income"
+    : "Expense";
+
+    const title =
+    type === "income"
+    ? data.method
+    : data.note;
+
+    row.innerHTML = `
+        <div class="left">
+            <div class="title">${title || "N/A"}</div>
+            <div class="mode">${modeText}</div>
+        </div>
+
+        <div class="amount">
+            ${sign} ₹${data.amount}
+        </div>
+    `;
+
+    content.appendChild(row);
+}
+function checkNoEntries(){
+
+    if(
+        incomeLoaded &&
+        expenseLoaded &&
+        totalEntries === 0
+    ){
+
+        content.innerHTML = `
+            <div class="no-data">
+                No Entries Found
+            </div>
+        `;
+    }
+}
+
+const incomeRef = ref(
+    db,
+    "incomes/" + today
+);
+
+onValue(incomeRef,(snapshot)=>{
+
+    snapshot.forEach((child)=>{
+
+        addRow(
+            child.val(),
+            "income"
+        );
+
+    });
+
+    incomeLoaded = true;
+
+    checkNoEntries();
+
+});
+
+const expenseRef = ref(
+    db,
+    "expenses/" + today
+);
+
+onValue(expenseRef,(snapshot)=>{
+
+    snapshot.forEach((child)=>{
+
+        addRow(
+            child.val(),
+            "expense"
+        );
+
+    });
+
+    expenseLoaded = true;
+
+    checkNoEntries();
+
+});
+
+</script>
+
+<script>
+
+function saveDate(){
+
+    const date =
+    document.getElementById(
+        "dateInput"
+    ).value;
+
+    if(!date){
+
+        alert(
+            "Select a date"
+        );
+
+        return;
+    }
+
+    localStorage.setItem(
+        "date",
+        date
+    );
+
+    window.location.href =
+    "Search.html";
+}
+
+</script>
+
+</body>
+</html>

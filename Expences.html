@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Expense</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#fff;
+}
+
+.navbar{
+    height:55px;
+    border-bottom:1px solid #000;
+    display:flex;
+    align-items:center;
+    position:relative;
+    padding:0 12px;
+}
+
+.back-btn{
+    width:40px;
+    height:40px;
+    border:1px solid #000;
+    border-radius:50%;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.nav-title{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:22px;
+}
+
+.container{
+    padding:25px;
+}
+
+.heading{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:35px;
+}
+
+.label{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.input{
+    width:100%;
+    height:55px;
+    border:1px solid #000;
+    border-radius:30px;
+    padding:0 20px;
+    font-size:18px;
+    outline:none;
+    margin-bottom:30px;
+}
+
+.save-wrap{
+    display:flex;
+    justify-content:center;
+}
+
+.save-btn{
+    width:130px;
+    height:55px;
+    border:1px solid #000;
+    border-radius:30px;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* overlay */
+#overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+.popup{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:250px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+    <div class="nav-title">Add Expense</div>
+</div>
+
+<div class="container">
+
+    <div class="heading">Add Expense</div>
+
+    <div class="label">Amount</div>
+    <input class="input" type="number" id="amount">
+
+    <div class="label">Date</div>
+    <input class="input" type="date" id="date">
+
+    <div class="label">Note</div>
+    <input class="input" type="text" id="note">
+
+    <div class="save-wrap">
+        <button class="save-btn" id="saveBtn">Save</button>
+    </div>
+
+</div>
+
+<!-- overlay -->
+<div id="overlay">
+  <div class="popup">
+    <h2>Saved Successfully</h2>
+    <button onclick="closeOverlay()" style="
+      margin-top:15px;
+      padding:10px 20px;
+      border:1px solid #000;
+      background:none;
+      border-radius:20px;
+      cursor:pointer;
+    ">OK</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getDatabase, ref, push, set }
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
+  authDomain: "site-2a9d6.firebaseapp.com",
+  databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
+  projectId: "site-2a9d6",
+  storageBucket: "site-2a9d6.firebasestorage.app",
+  messagingSenderId: "1060812483121",
+  appId: "1:1060812483121:web:d2b173d180071145810310"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const saveBtn = document.getElementById("saveBtn");
+
+saveBtn.addEventListener("click", async () => {
+    const amount = document.getElementById("amount").value;
+    const date = document.getElementById("date").value;
+    const note = document.getElementById("note").value;
+
+    if (!amount || !date) {
+        alert("Amount and Date required");
+        return;
+    }
+
+    const dbRef = ref(db, "expenses/" + date);
+    const newEntry = push(dbRef);
+
+    await set(newEntry, {
+        amount: Number(amount),
+        note: note,
+        
+    });
+
+    document.getElementById("overlay").style.display = "flex";
+
+    document.getElementById("amount").value = "";
+    document.getElementById("note").value = "";
+});
+
+window.closeOverlay = function () {
+    document.getElementById("overlay").style.display = "none";
+};
+</script>
+
+</body>
+</html>
