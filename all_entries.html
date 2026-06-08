@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>All Entries</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#fff;
+}
+
+.navbar{
+height:55px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #e5e5e5;
+position:sticky;
+top:0;
+background:#fff;
+z-index:1000;
+padding:0 10px;
+}
+
+.back-btn{
+width:40px;
+height:40px;
+border:1px solid #000;
+border-radius:50%;
+background:none;
+font-size:22px;
+cursor:pointer;
+}
+
+.nav-title{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+font-size:22px;
+font-weight:bold;
+}
+
+.container{
+padding:15px;
+}
+
+.day-card{
+border:1px solid #ddd;
+padding:12px;
+margin-bottom:20px;
+border-radius:12px;
+}
+
+.day-title{
+font-size:20px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid #eee;
+}
+
+.left{
+display:flex;
+flex-direction:column;
+}
+
+.title{
+font-size:16px;
+}
+
+.mode{
+font-size:12px;
+color:#666;
+}
+
+.right{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.amount{
+font-size:16px;
+font-weight:bold;
+}
+
+.action-btn{
+width:32px;
+height:32px;
+border:1px solid #000;
+border-radius:8px;
+background:#fff;
+cursor:pointer;
+}
+
+.summary-box{
+margin-top:10px;
+padding-top:10px;
+border-top:1px solid #ddd;
+}
+
+.summary-title{
+text-align:center;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.summary-row{
+display:flex;
+justify-content:space-between;
+padding:3px 0;
+}
+
+.month-box,
+.year-box{
+border:2px solid #000;
+padding:15px;
+margin-top:20px;
+border-radius:12px;
+}
+
+.big-title{
+text-align:center;
+font-size:20px;
+font-weight:bold;
+margin-bottom:12px;
+}
+.summary-profit{
+display:flex;
+justify-content:space-between;
+padding-top:8px;
+margin-top:8px;
+border-top:1px solid #ddd;
+font-weight:bold;
+}
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.box{
+background:#fff;
+padding:15px;
+width:90%;
+max-width:320px;
+border-radius:10px;
+}
+
+.box input,
+.box select{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border:1px solid #000;
+border-radius:8px;
+}
+
+.box button{
+width:100%;
+padding:12px;
+border:1px solid #000;
+background:#fff;
+border-radius:12px;
+cursor:pointer;
+}
+
+.no-data{
+text-align:center;
+padding:40px;
+color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+<button class="back-btn"
+onclick="history.back()">←</button>
+
+<div class="nav-title">
+All Entries
+</div>
+</div>
+
+<div class="container" id="content"></div>
+
+<div class="popup" id="popup">
+
+<div class="box">
+
+<input type="number"
+id="editAmount"
+placeholder="Amount">
+
+<select id="editMethod">
+
+<option value="Cash">Cash</option>
+<option value="UPI">UPI</option>
+<option value="Credit">Credit</option>
+<option value="Expense">Expense</option>
+
+</select>
+
+<input type="text"
+id="editNote"
+placeholder="Note">
+
+<button onclick="saveEdit()">
+Save
+</button>
+
+</div>
+
+</div>
+
+<script>
+    const content =
+document.getElementById("content");
+
+function getData(key){
+return JSON.parse(
+localStorage.getItem(key)
+) || {};
+}
+
+function saveData(key,data){
+localStorage.setItem(
+key,
+JSON.stringify(data)
+);
+}
+
+let editInfo = null;
+
+function loadData(){
+
+content.innerHTML = "";
+
+const incomes =
+getData("incomes");
+
+const expenses =
+getData("expenses");
+
+let days = {};
+
+for(const date in incomes){
+
+if(!days[date]){
+days[date] = [];
+}
+
+incomes[date].forEach(item=>{
+
+days[date].push({
+...item,
+entryType:"income"
+});
+
+});
+
+}
+
+for(const date in expenses){
+
+if(!days[date]){
+days[date] = [];
+}
+
+expenses[date].forEach(item=>{
+
+days[date].push({
+...item,
+entryType:"expense"
+});
+
+});
+
+}
+
+const dates =
+Object.keys(days)
+.sort()
+.reverse();
+
+if(dates.length===0){
+
+content.innerHTML=
+'<div class="no-data">No Entries</div>';
+
+return;
+}
+
+let yearCash=0;
+let yearUPI=0;
+let yearCredit=0;
+let yearExpense=0;
+dates.forEach(date=>{
+
+let cash=0;
+let upi=0;
+let credit=0;
+let expense=0;
+
+const card =
+document.createElement("div");
+
+card.className="day-card";
+
+let html=`
+<div class="day-title">
+${date}
+</div>
+`;
+
+days[date].forEach(item=>{
+
+const amount =
+Number(item.amount);
+
+if(item.entryType==="income"){
+
+if(item.method==="Cash"){
+cash+=amount;
+yearCash+=amount;
+}
+
+if(item.method==="UPI"){
+upi+=amount;
+yearUPI+=amount;
+}
+
+if(item.method==="Credit"){
+credit+=amount;
+yearCredit+=amount;
+}
+
+}else{
+
+expense+=amount;
+yearExpense+=amount;
+
+}
+
+html+=`
+
+<div class="row">
+
+<div class="left">
+<div class="title">
+${item.note || item.method || "Entry"}
+</div>
+
+<div class="mode">
+${item.entryType}
+</div>
+</div>
+
+<div class="right">
+
+<div class="amount">
+${item.entryType==="income"
+? "+"
+: "-"
+}
+₹${amount}
+</div>
+
+<button
+class="action-btn"
+onclick="editEntry(
+'${date}',
+'${item.time}',
+'${item.entryType}'
+)">
+<i class="fa-solid fa-pen"></i>
+</button>
+
+<button
+class="action-btn"
+onclick="deleteEntry(
+'${date}',
+'${item.time}',
+'${item.entryType}'
+)">
+<i class="fa-solid fa-trash"></i>
+</button>
+
+</div>
+</div>
+
+`;
+
+});
+const profit =
+cash + upi + credit - expense;
+
+html+=`
+
+<div class="summary-box">
+
+<div class="summary-title">
+Day Summary
+</div>
+
+<div class="summary-row">
+<span>Cash</span>
+<span>₹${cash}</span>
+</div>
+
+<div class="summary-row">
+<span>UPI</span>
+<span>₹${upi}</span>
+</div>
+
+<div class="summary-row">
+<span>Credit</span>
+<span>₹${credit}</span>
+</div>
+
+<div class="summary-row">
+<span>Expense</span>
+<span>₹${expense}</span>
+</div>
+
+<div class="summary-profit">
+<span>Profit</span>
+<span>₹${profit}</span>
+</div>
+
+</div>
+
+`;
+
+card.innerHTML = html;
+
+content.appendChild(card);
+
+});
+
+const yearProfit =
+yearCash +
+yearUPI +
+yearCredit -
+yearExpense;
+
+content.innerHTML += `
+
+<div class="year-box">
+
+<div class="big-title">
+Year Summary
+</div>
+
+<div class="summary-row">
+<span>Cash</span>
+<span>₹${yearCash}</span>
+</div>
+
+<div class="summary-row">
+<span>UPI</span>
+<span>₹${yearUPI}</span>
+</div>
+
+<div class="summary-row">
+<span>Credit</span>
+<span>₹${yearCredit}</span>
+</div>
+
+<div class="summary-row">
+<span>Expense</span>
+<span>₹${yearExpense}</span>
+</div>
+
+<div class="summary-profit">
+<span>Grand Profit</span>
+<span>₹${yearProfit}</span>
+</div>
+
+</div>
+
+`;
+
+}
+window.deleteEntry =
+function(date,time,type){
+
+const key =
+type==="income"
+? "incomes"
+: "expenses";
+
+let data =
+getData(key);
+
+data[date] =
+data[date].filter(
+x => x.time != time
+);
+
+saveData(key,data);
+
+loadData();
+};
+
+window.editEntry =
+function(date,time,type){
+
+editInfo = {
+date,time,type
+};
+
+const data =
+getData(
+type==="income"
+? "incomes"
+: "expenses"
+);
+
+const item =
+data[date].find(
+x => x.time == time
+);
+
+document.getElementById(
+"editAmount"
+).value = item.amount;
+
+document.getElementById(
+"editNote"
+).value =
+item.note || "";
+
+document.getElementById(
+"editMethod"
+).value =
+item.method ||
+"Expense";
+
+document.getElementById(
+"popup"
+).style.display =
+"flex";
+};
+
+window.saveEdit =
+function(){
+
+const key =
+editInfo.type==="income"
+? "incomes"
+: "expenses";
+
+let data =
+getData(key);
+
+const item =
+data[editInfo.date]
+.find(
+x => x.time ==
+editInfo.time
+);
+
+item.amount =
+Number(
+document.getElementById(
+"editAmount"
+).value
+);
+
+item.note =
+document.getElementById(
+"editNote"
+).value;
+
+if(editInfo.type==="income"){
+
+item.method =
+document.getElementById(
+"editMethod"
+).value;
+
+}
+
+saveData(key,data);
+
+document.getElementById(
+"popup"
+).style.display =
+"none";
+
+loadData();
+
+};
+
+loadData();
+
+</script>
+</body>
+</html>

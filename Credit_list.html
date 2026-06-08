@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credits</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
 *{
     margin:0;
@@ -23,16 +25,13 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     border-bottom:1px solid #e5e5e5;
     font-size:20px;
     font-weight:bold;
-
     position: sticky;
     top: 0;
     background: #fff;
     z-index: 1000;
-
     padding: 0 10px;
 }
 
@@ -85,14 +84,26 @@ body{
     font-weight:bold;
 }
 
-.btns button{
-    margin-left:6px;
-    padding:4px 8px;
-    font-size:12px;
+/* ICON BUTTONS */
+.btns{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    width:36px;
+    height:36px;
     border:1px solid #000;
+    border-radius:10px;
     background:none;
     cursor:pointer;
-    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.icon-btn i{
+    font-size:14px;
 }
 
 .empty{
@@ -127,10 +138,19 @@ body{
     padding:8px;
     margin:8px 0;
 }
-
 .box button{
     width:100%;
-    padding:10px;
+    padding:12px;
+    margin-top:10px;
+
+    border:1px solid #000;
+    border-radius:12px;
+
+    background:#fff;
+    color:#000;
+
+    font-size:16px;
+    cursor:pointer;
 }
 </style>
 </head>
@@ -143,7 +163,7 @@ body{
 </div>
 
 <div id="list"></div>
-<div id="empty" class="empty" style="display:none;">No credits</div>
+<div id="empty" class="empty" style="display:none;">No credits pending</div>
 
 <!-- EDIT POPUP -->
 <div class="popup" id="popup">
@@ -152,59 +172,46 @@ body{
         <select id="mode">
             <option value="Cash">Cash</option>
             <option value="UPI">UPI</option>
+            <option value="Credit">Credit</option>
         </select>
         <input id="note" type="text" placeholder="Note">
         <button onclick="saveEdit()">Save</button>
     </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getDatabase, ref, onValue, remove, push }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+<script>
+function getData(key){
+    return JSON.parse(localStorage.getItem(key)) || {};
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
-  authDomain: "site-2a9d6.firebaseapp.com",
-  databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
-  projectId: "site-2a9d6",
-  storageBucket: "site-2a9d6.firebasestorage.app",
-  messagingSenderId: "1060812483121",
-  appId: "1:1060812483121:web:d2b173d180071145810310"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const list = document.getElementById("list");
-const empty = document.getElementById("empty");
+function saveData(key, data){
+    localStorage.setItem(key, JSON.stringify(data));
+}
 
 let editData = null;
 
-// READ ALL INCOMES AND FILTER CREDIT
-const incomeRef = ref(db, "incomes");
+// LOAD
+function loadCredits(){
 
-onValue(incomeRef, (snap) => {
+    const list = document.getElementById("list");
+    const empty = document.getElementById("empty");
 
     list.innerHTML = "";
 
+    const incomes = getData("incomes");
+
     let credits = [];
 
-    snap.forEach(daySnap => {
-        const date = daySnap.key;
-
-        daySnap.forEach(child => {
-            const d = child.val();
-
-            if(d.method === "Credit") {
+    for(const date in incomes){
+        incomes[date].forEach(item => {
+            if(item.method === "Credit"){
                 credits.push({
-                    id: child.key,
-                    date,
-                    ...d
+                    ...item,
+                    date
                 });
             }
         });
-    });
+    }
 
     if(credits.length === 0){
         empty.style.display = "block";
@@ -215,7 +222,7 @@ onValue(incomeRef, (snap) => {
 
     credits.sort((a,b)=> new Date(a.date) - new Date(b.date));
 
-    credits.forEach(item => {
+    credits.forEach((item, index) => {
 
         const div = document.createElement("div");
         div.className = "card";
@@ -228,51 +235,88 @@ onValue(incomeRef, (snap) => {
 
             <div>
                 <div class="amount">₹${item.amount}</div>
+
                 <div class="btns">
-                    <button onclick="editItem('${item.date}','${item.id}',${item.amount},'${item.note || ""}')">Edit</button>
-                    <button onclick="deleteItem('${item.date}','${item.id}')">Delete</button>
+                    <button class="icon-btn edit-btn">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+
+                    <button class="icon-btn delete-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             </div>
         `;
 
+        // FIND ORIGINAL ITEM
+        div.querySelector(".edit-btn").onclick = () => editItem(item.date, item.amount, item.method, item.note);
+        div.querySelector(".delete-btn").onclick = () => deleteItem(item.date, item);
+
         list.appendChild(div);
     });
-});
+}
 
 // DELETE
-window.deleteItem = async (date,id)=>{
-    await remove(ref(db,"incomes/"+date+"/"+id));
-};
+function deleteItem(date, item){
+
+    let incomes = getData("incomes");
+
+    incomes[date] = incomes[date].filter(i =>
+        !(i.amount === item.amount &&
+          i.note === item.note &&
+          i.method === item.method)
+    );
+
+    if(incomes[date].length === 0){
+        delete incomes[date];
+    }
+
+    saveData("incomes", incomes);
+    loadCredits();
+}
 
 // EDIT
-window.editItem = (date,id,amount,note)=>{
-    editData = {date,id};
+function editItem(date, amount, method, note){
+
+    editData = {date, amount, method, note};
 
     document.getElementById("amt").value = amount;
+    document.getElementById("mode").value = method;
     document.getElementById("note").value = note || "";
-    document.getElementById("mode").value = "Cash";
 
-    document.getElementById("popup").style.display="flex";
-};
+    document.getElementById("popup").style.display = "flex";
+}
 
-// SAVE → MOVE TO CASH / UPI INCOME
-window.saveEdit = async ()=>{
+// SAVE EDIT
+function saveEdit(){
+
+    const incomes = getData("incomes");
 
     const amount = Number(document.getElementById("amt").value);
     const mode = document.getElementById("mode").value;
     const note = document.getElementById("note").value;
 
-    await push(ref(db,"incomes/"+editData.date),{
-        method: mode,
-        amount: amount,
-        note: note
-    });
+    for(const date in incomes){
+        incomes[date].forEach(i => {
+            if(
+                i.amount === editData.amount &&
+                i.method === editData.method &&
+                i.note === editData.note
+            ){
+                i.amount = amount;
+                i.method = mode;
+                i.note = note;
+            }
+        });
+    }
 
-    await remove(ref(db,"incomes/"+editData.date+"/"+editData.id));
+    saveData("incomes", incomes);
 
-    document.getElementById("popup").style.display="none";
-};
+    document.getElementById("popup").style.display = "none";
+    loadCredits();
+}
 
+loadCredits();
 </script>
 
 </body>

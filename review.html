@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Report</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -19,21 +18,16 @@ background:#f5f5f5;
 }
 
 .navbar{
-    height:55px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    border-bottom:1px solid #e5e5e5;
-    font-size:20px;
-    font-weight:bold;
-
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1000;
-
-    padding: 0 10px;
+height:55px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#fff;
+border-bottom:1px solid #ddd;
+font-weight:bold;
+font-size:20px;
+position:sticky;
+top:0;
 }
 
 .container{
@@ -45,459 +39,158 @@ background:#fff;
 border-radius:12px;
 padding:15px;
 margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.summary h2{
-margin-bottom:15px;
-text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
 .sum-row{
 display:flex;
 justify-content:space-between;
 padding:8px 0;
-font-size:16px;
 }
 
 .total{
-font-size:22px;
+font-size:20px;
 font-weight:bold;
-padding-top:12px;
-margin-top:12px;
 border-top:1px solid #ddd;
-}
-
-.card{
-background:#fff;
-border-radius:12px;
-padding:15px;
-margin-bottom:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.date{
-font-size:18px;
-font-weight:bold;
-margin-bottom:10px;
-}
-
-.row{
-display:flex;
-justify-content:space-between;
-padding:4px 0;
-}
-
-.profit{
 margin-top:10px;
 padding-top:10px;
-border-top:1px solid #eee;
-font-weight:bold;
-font-size:18px;
 }
 
 .noData{
 text-align:center;
 padding:40px;
-font-size:20px;
 color:#777;
 }
-
 </style>
 </head>
+
 <body>
 
-<div class="navbar">
-Report
-</div>
+<div class="navbar">Report</div>
 
 <div class="container">
 
 <div class="summary">
-
-<h2 id="reportTitle">Loading...</h2>
+<h3 id="title">Report</h3>
 
 <div class="sum-row">
 <span>UPI</span>
-<span id="upiTotal">₹0</span>
+<span id="upi">₹0</span>
 </div>
 
 <div class="sum-row">
 <span>Cash</span>
-<span id="cashTotal">₹0</span>
+<span id="cash">₹0</span>
 </div>
 
 <div class="sum-row">
 <span>Credit</span>
-<span id="creditTotal">₹0</span>
+<span id="credit">₹0</span>
 </div>
 
 <div class="sum-row">
 <span>Total Income</span>
-<span id="incomeTotal">₹0</span>
+<span id="income">₹0</span>
 </div>
 
 <div class="sum-row">
 <span>Total Expense</span>
-<span id="expenseTotal">₹0</span>
+<span id="expense">₹0</span>
 </div>
 
 <div class="sum-row total">
-<span>Grand Profit</span>
-<span id="grandProfit">₹0</span>
+<span>Profit</span>
+<span id="profit">₹0</span>
 </div>
 
 </div>
 
-<div id="reportList"></div>
+<div id="list"></div>
 
 </div>
 
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-get
-}
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
-authDomain: "site-2a9d6.firebaseapp.com",
-databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
-projectId: "site-2a9d6",
-storageBucket: "site-2a9d6.firebasestorage.app",
-messagingSenderId: "1060812483121",
-appId: "1:1060812483121:web:d2b173d180071145810310"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const report = localStorage.getItem("report") || "";
-
-document.getElementById("reportTitle").innerText = report;
-
-const reportList =
-document.getElementById("reportList");
+<script>
+const incomes = JSON.parse(localStorage.getItem("incomes") || "{}");
+const expenses = JSON.parse(localStorage.getItem("expenses") || "{}");
 
 let totalUPI = 0;
 let totalCash = 0;
 let totalCredit = 0;
 let totalIncome = 0;
 let totalExpense = 0;
-function parseReport(value){
 
-let monthMap = {
-jan:"01",
-feb:"02",
-mar:"03",
-apr:"04",
-may:"05",
-jun:"06",
-jul:"07",
-aug:"08",
-sep:"09",
-oct:"10",
-nov:"11",
-dec:"12"
-};
+const list = document.getElementById("list");
 
-value = value.toLowerCase();
+function addRow(date, name, type, amount){
 
-const parts = value.split("/");
+const div = document.createElement("div");
 
-if(parts.length !== 2){
-return null;
+div.style.background = "#fff";
+div.style.marginBottom = "10px";
+div.style.padding = "10px";
+div.style.borderRadius = "10px";
+
+div.innerHTML = `
+<b>${date}</b><br>
+${name} - ${type} - ₹${amount}
+`;
+
+list.appendChild(div);
 }
 
-const month =
-monthMap[
-parts[0].trim()
-];
-
-const year =
-parts[1].trim();
-
-if(!month){
-return null;
-}
-
-return {
-year,
-month
-};
-
-}
-
-const selected =
-parseReport(report);
-
-if(!selected){
-
-reportList.innerHTML =
-'<div class="noData">Invalid Report</div>';
-
-throw new Error("Invalid Report");
-
-}
-
-async function loadData(){
-
-const incomeSnap =
-await get(
-ref(db,"incomes")
-);
-
-const expenseSnap =
-await get(
-ref(db,"expenses")
-);
-
-const incomes =
-incomeSnap.exists()
-? incomeSnap.val()
-: {};
-
-const expenses =
-expenseSnap.exists()
-? expenseSnap.val()
-: {};
-
-let reportDays = {};
-
+// INCOME LOOP
 for(const date in incomes){
 
-if(
-!date.startsWith(
-selected.year +
-"-" +
-selected.month
-)
-){
-continue;
-}
+const entries = incomes[date];
 
-reportDays[date] = {
-upi:0,
-cash:0,
-credit:0,
-income:0,
-expense:0
-};
+entries.forEach(item => {
 
-const entries =
-incomes[date];
-
-for(const id in entries){
-
-const item =
-entries[id];
-
-const amount =
-Number(item.amount || 0);
-
-const method =
-(item.method || "")
-.toUpperCase();
-
-reportDays[date]
-.income += amount;
+const amount = Number(item.amount || 0);
+const method = (item.method || "").toUpperCase();
 
 totalIncome += amount;
 
-if(method === "UPI"){
+if(method === "UPI") totalUPI += amount;
+else if(method === "CASH") totalCash += amount;
+else if(method === "CREDIT") totalCredit += amount;
 
-reportDays[date]
-.upi += amount;
+addRow(date, item.note || "Income", method, amount);
 
-totalUPI += amount;
-
-}
-else if(
-method === "CASH"
-){
-
-reportDays[date]
-.cash += amount;
-
-totalCash += amount;
-
-}
-else{
-
-reportDays[date]
-.credit += amount;
-
-totalCredit += amount;
+});
 
 }
 
-}
-
-}
+// EXPENSE LOOP
 for(const date in expenses){
 
-if(
-!date.startsWith(
-selected.year +
-"-" +
-selected.month
-)
-){
-continue;
-}
+const entries = expenses[date];
 
-if(!reportDays[date]){
+entries.forEach(item => {
 
-reportDays[date] = {
-upi:0,
-cash:0,
-credit:0,
-income:0,
-expense:0
-};
-
-}
-
-const entries =
-expenses[date];
-
-for(const id in entries){
-
-const item =
-entries[id];
-
-const amount =
-Number(
-item.amount || 0
-);
-
-reportDays[date]
-.expense += amount;
+const amount = Number(item.amount || 0);
 
 totalExpense += amount;
 
-}
-
-}
-
-const sortedDates =
-Object.keys(reportDays)
-.sort()
-.reverse();
-
-if(
-sortedDates.length === 0
-){
-
-reportList.innerHTML = `
-<div class="noData">
-No Records Found
-</div>
-`;
-
-return;
-
-}
-
-sortedDates.forEach(date=>{
-
-const data =
-reportDays[date];
-
-const profit =
-data.income -
-data.expense;
-
-const card =
-document.createElement("div");
-
-card.className =
-"card";
-
-card.innerHTML = `
-
-<div class="date">
-${date}
-</div>
-
-<div class="row">
-<span>UPI</span>
-<span>₹${data.upi}</span>
-</div>
-
-<div class="row">
-<span>Cash</span>
-<span>₹${data.cash}</span>
-</div>
-
-<div class="row">
-<span>Credit</span>
-<span>₹${data.credit}</span>
-</div>
-
-<div class="row">
-<span>Income</span>
-<span>₹${data.income}</span>
-</div>
-
-<div class="row">
-<span>Expense</span>
-<span>₹${data.expense}</span>
-</div>
-
-<div class="profit">
-Profit ₹${profit}
-</div>
-
-`;
-
-reportList.appendChild(card);
+addRow(date, item.note || "Expense", "EXPENSE", amount);
 
 });
-const grandProfit =
-totalIncome -
-totalExpense;
-
-document.getElementById(
-"upiTotal"
-).innerText =
-"₹" + totalUPI;
-
-document.getElementById(
-"cashTotal"
-).innerText =
-"₹" + totalCash;
-
-document.getElementById(
-"creditTotal"
-).innerText =
-"₹" + totalCredit;
-
-document.getElementById(
-"incomeTotal"
-).innerText =
-"₹" + totalIncome;
-
-document.getElementById(
-"expenseTotal"
-).innerText =
-"₹" + totalExpense;
-
-document.getElementById(
-"grandProfit"
-).innerText =
-"₹" + grandProfit;
 
 }
 
-loadData();
+// UI UPDATE
+document.getElementById("upi").innerText = "₹" + totalUPI;
+document.getElementById("cash").innerText = "₹" + totalCash;
+document.getElementById("credit").innerText = "₹" + totalCredit;
+document.getElementById("income").innerText = "₹" + totalIncome;
+document.getElementById("expense").innerText = "₹" + totalExpense;
 
+document.getElementById("profit").innerText =
+"₹" + (totalIncome - totalExpense);
+
+if(totalIncome === 0 && totalExpense === 0){
+document.getElementById("list").innerHTML =
+"<div class='noData'>No Records Found</div>";
+}
 </script>
 
 </body>

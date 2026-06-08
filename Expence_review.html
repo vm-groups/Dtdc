@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>All Expenses</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{padding-bottom:70px}
+.navbar{height:55px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ddd;position:sticky;top:0;background:#fff}
+.back{position:absolute;left:10px;width:40px;height:40px;border:1px solid #000;border-radius:50%;background:#fff}
+.filters{display:flex;gap:8px;padding:12px;position:sticky;top:55px;background:#fff;border-bottom:1px solid #eee}
+.filters button{flex:1;height:42px;border:1px solid #000;border-radius:10px;background:#fff}
+.active{background:#000!important;color:#fff}
+.container{padding:15px}
+.day{border:1px solid #ddd;border-radius:12px;padding:12px;margin-bottom:15px;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.date{font-weight:bold;font-size:18px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+.sum{display:flex;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid #ddd;font-weight:bold}
+.bottom{position:fixed;bottom:0;left:0;width:100%;height:60px;border-top:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
+.box{background:#fff;padding:15px;width:90%;max-width:320px;border-radius:12px}
+select,button.show{width:100%;height:45px;margin-top:10px}
+.msg{text-align:center;padding:50px 10px;color:#666}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+<button class="back" onclick="history.back()">←</button>
+<b>All Expenses</b>
+</div>
+
+<div class="filters">
+<button id="allBtn" class="active" onclick="showAll()">All</button>
+<button id="todayBtn" onclick="showToday()">Today</button>
+<button id="monthBtn" onclick="openMonth()">Month</button>
+<button id="yearBtn" onclick="openYear()">Year</button>
+</div>
+
+<div id="content" class="container"></div>
+
+<div class="bottom">Grand Total ₹<span id="gt">0</span></div>
+
+<div class="popup" id="monthPop">
+<div class="box">
+<h3>Select Month</h3>
+<select id="month"></select>
+<select id="monthYear"></select>
+<button class="show" onclick="filterMonth()">Show Expenses</button>
+</div>
+</div>
+
+<div class="popup" id="yearPop">
+<div class="box">
+<h3>Select Year</h3>
+<select id="year"></select>
+<button class="show" onclick="filterYear()">Show Expenses</button>
+</div>
+</div>
+
+<script>
+const expenses=JSON.parse(localStorage.getItem("expenses"))||{};
+const c=document.getElementById("content");
+
+for(let i=1;i<=12;i++){
+month.innerHTML+=`<option value="${String(i).padStart(2,"0")}">${new Date(2025,i-1,1).toLocaleString('en',{month:'long'})}</option>`;
+}
+for(let y=2020;y<=2035;y++){
+monthYear.innerHTML+=`<option>${y}</option>`;
+year.innerHTML+=`<option>${y}</option>`;
+}
+
+const n=new Date();
+month.value=String(n.getMonth()+1).padStart(2,"0");
+monthYear.value=n.getFullYear();
+year.value=n.getFullYear();
+
+function activate(id){
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function render(arr){
+c.innerHTML="";
+let grand=0;
+
+if(!arr.length){
+c.innerHTML='<div class="msg">No Expenses Found</div>';
+gt.textContent=0;
+return;
+}
+
+arr.sort((a,b)=>new Date(b)-new Date(a));
+
+arr.forEach(date=>{
+let day=0;
+let html=`<div class="day"><div class="date">${date}</div>`;
+(expenses[date]||[]).forEach(x=>{
+let amt=Number(x.amount||0);
+day+=amt; grand+=amt;
+html+=`<div class="row"><span>${x.note||'Expense'}</span><b>₹${amt}</b></div>`;
+});
+html+=`<div class="sum"><span>Day Total</span><span>₹${day}</span></div></div>`;
+c.innerHTML+=html;
+});
+gt.textContent=grand;
+}
+
+function showAll(){
+activate("allBtn");
+render([...Object.keys(expenses)]);
+}
+
+function showToday(){
+activate("todayBtn");
+const d=new Date();
+const t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+render(expenses[t]?[t]:[]);
+}
+
+function openMonth(){
+activate("monthBtn");
+monthPop.style.display="flex";
+}
+
+function openYear(){
+activate("yearBtn");
+yearPop.style.display="flex";
+}
+
+function filterMonth(){
+const m=month.value;
+const y=monthYear.value;
+monthPop.style.display="none";
+const res=[];
+Object.keys(expenses).forEach(d=>{
+const p=d.split("-");
+if(p[0]==y && p[1]==m) res.push(d);
+});
+render(res);
+}
+
+function filterYear(){
+const y=year.value;
+yearPop.style.display="none";
+const res=[];
+Object.keys(expenses).forEach(d=>{
+if(d.startsWith(y)) res.push(d);
+});
+render(res);
+}
+
+monthPop.onclick=e=>{if(e.target===monthPop)monthPop.style.display="none";}
+yearPop.onclick=e=>{if(e.target===yearPop)yearPop.style.display="none";}
+
+showAll();
+</script>
+</body>
+</html>

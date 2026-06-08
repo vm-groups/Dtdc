@@ -6,489 +6,382 @@
 <title>Profit</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-body{
-background:#fff;
+body {
+    background: #fff;
 }
 
-.navbar{
-    height:55px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    border-bottom:1px solid #e5e5e5;
-    font-size:20px;
-    font-weight:bold;
-
+.navbar {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 20px;
+    font-weight: bold;
     position: sticky;
     top: 0;
     background: #fff;
     z-index: 1000;
-
     padding: 0 10px;
 }
 
-.back-btn{
-width:40px;
-height:40px;
-border:1px solid #000;
-border-radius:50%;
-background:none;
-font-size:22px;
-cursor:pointer;
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
 }
 
-.nav-title{
-position:absolute;
-left:50%;
-transform:translateX(-50%);
-font-size:22px;
+.nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
 }
 
-.container{
-padding:15px;
+.container {
+    padding: 15px;
 }
 
-.month-box{
-display:flex;
-gap:8px;
-margin-top:15px;
-margin-bottom:20px;
+.month-box {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
-.month-box select{
-flex:1;
-height:45px;
-border:1px solid #000;
-border-radius:25px;
-padding:0 15px;
-background:#fff;
+.month-box select {
+    flex: 1;
+    height: 45px;
+    border: 1px solid #000;
+    border-radius: 25px;
+    padding: 0 15px;
 }
 
-.month-box button{
-height:45px;
-padding:0 18px;
-border:1px solid #000;
-border-radius:25px;
-background:none;
-cursor:pointer;
+.month-box button {
+    height: 45px;
+    padding: 0 18px;
+    border: 1px solid #000;
+    border-radius: 25px;
+    background: none;
+    cursor: pointer;
 }
 
-.entry-table{
-width:100%;
-border-collapse:collapse;
+.entry-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.entry-table tr{
-border-bottom:1px solid #ddd;
+.entry-table tr {
+    border-bottom: 1px solid #ddd;
 }
 
-.entry-table td{
-padding:12px 0;
+.entry-table td {
+    padding: 12px 0;
 }
 
-.main-text{
-font-size:18px;
+.main-text {
+    font-size: 18px;
 }
 
-.sub-text{
-font-size:13px;
-margin-top:3px;
+.sub-text {
+    font-size: 13px;
+    margin-top: 3px;
 }
 
-.amount{
-text-align:right;
-white-space:nowrap;
-font-size:18px;
+.amount {
+    text-align: right;
+    font-size: 18px;
 }
 
-#noData{
-display:none;
-text-align:center;
-padding:25px;
-font-size:18px;
+#noData {
+    display: none;
+    text-align: center;
+    padding: 25px;
+    font-size: 18px;
 }
 
-.summary{
-display:none;
-margin-top:20px;
-border:1px solid #000;
-padding:15px;
+.summary {
+    display: none;
+    margin-top: 20px;
+    border: 1px solid #000;
+    padding: 15px;
 }
 
-.summary-title{
-text-align:center;
-font-size:20px;
-margin-bottom:15px;
+.summary-title {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 15px;
 }
 
-.summary-row{
-display:flex;
-justify-content:space-between;
-padding:8px 0;
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
 }
 
-.profit-row{
-display:flex;
-justify-content:space-between;
-border-top:1px solid #000;
-margin-top:10px;
-padding-top:10px;
-font-size:20px;
+.profit-row {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #000;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 20px;
 }
 
-#addBillBtn{
-display:none;
-width:90%;
-height:50px;
-margin:20px auto;
-border:1px solid #000;
-border-radius:25px;
-background:none;
-font-size:18px;
-cursor:pointer;
+#addBillBtn {
+    display: none;
+    width: 90%;
+    height: 50px;
+    margin: 20px auto;
+    border: 1px solid #000;
+    border-radius: 25px;
+    background: none;
+    font-size: 18px;
+    cursor: pointer;
 }
-
 </style>
 </head>
+
 <body>
 
 <div class="navbar">
-<button class="back-btn" onclick="history.back()">←</button>
-<div class="nav-title">Profit</div>
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="nav-title">Profit</div>
 </div>
 
 <div class="container">
 
 <div class="month-box">
-
-<select id="monthSelect">
-<option value="01">Jan</option>
-<option value="02">Feb</option>
-<option value="03">Mar</option>
-<option value="04">Apr</option>
-<option value="05">May</option>
-<option value="06">Jun</option>
-<option value="07">Jul</option>
-<option value="08">Aug</option>
-<option value="09">Sep</option>
-<option value="10">Oct</option>
-<option value="11">Nov</option>
-<option value="12">Dec</option>
-</select>
-
-<select id="yearSelect"></select>
-
-<button id="loadBtn">Search</button>
-
+    <select id="monthSelect"></select>
+    <select id="yearSelect"></select>
+    <button id="loadBtn">Search</button>
 </div>
 
 <table class="entry-table" id="entryTable"></table>
 
-<div id="noData">
-No Entries Found
-</div>
+<div id="noData">No Entries Found</div>
 
 <div class="summary" id="summaryBox">
+    <div class="summary-title">Summary</div>
 
-<div class="summary-title">
-Summary
-</div>
+    <div class="summary-row"><span>Cash</span><span id="cashTotal">₹0</span></div>
+    <div class="summary-row"><span>UPI</span><span id="upiTotal">₹0</span></div>
+    <div class="summary-row"><span>Credit</span><span id="creditTotal">₹0</span></div>
+    <div class="summary-row"><span>Expenses</span><span id="expenseTotal">₹0</span></div>
+    <div class="summary-row"><span>Bills</span><span id="billTotal">₹0</span></div>
 
-<div class="summary-row">
-<span>Cash</span>
-<span id="cashTotal">₹0</span>
-</div>
-
-<div class="summary-row">
-<span>UPI</span>
-<span id="upiTotal">₹0</span>
-</div>
-<div class="summary-row">
-<span>Credit</span>
-<span id="creditTotal">₹0</span>
+    <div class="profit-row">
+        <span>Profit</span>
+        <span id="profitTotal">₹0</span>
+    </div>
 </div>
 
-<div class="summary-row">
-<span>Expenses</span>
-<span id="expenseTotal">₹0</span>
-</div>
+<button id="addBillBtn">Add Bill</button>
 
-<div class="summary-row">
-<span>Bills</span>
-<span id="billTotal">₹0</span>
-</div>
-
-<div class="profit-row">
-<span>Profit</span>
-<span id="profitTotal">₹0</span>
-</div>
+<button onclick="downloadCSV()">Download CSV</button>
 
 </div>
 
-<button id="addBillBtn">
-Add Bill
-</button>
+<script>
+let rows = [];
 
-</div>
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-get,
-push,
-set
-}
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-
-const firebaseConfig = {
-apiKey:"AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
-authDomain:"site-2a9d6.firebaseapp.com",
-databaseURL:"https://site-2a9d6-default-rtdb.firebaseio.com",
-projectId:"site-2a9d6",
-storageBucket:"site-2a9d6.firebasestorage.app",
-messagingSenderId:"1060812483121",
-appId:"1:1060812483121:web:d2b173d180071145810310"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+let cashTotal = 0;
+let upiTotal = 0;
+let creditTotal = 0;
+let expenseTotal = 0;
+let billTotal = 0;
 
 const table = document.getElementById("entryTable");
 
-const monthSelect =
-document.getElementById("monthSelect");
+function getData(key){
+    return JSON.parse(localStorage.getItem(key)) || {};
+}
 
-const yearSelect =
-document.getElementById("yearSelect");
+function saveData(key, val){
+    localStorage.setItem(key, JSON.stringify(val));
+}
+
+// CSV DOWNLOAD
+window.downloadCSV = function(){
+
+    let csv = [];
+
+    csv.push(["Date","Title","Type","Amount"]);
+
+    rows.forEach(r => {
+        csv.push([r.date, r.title, r.type, r.amount]);
+    });
+
+    csv.push([]);
+    csv.push(["SUMMARY","","",""]);
+
+    let profit = cashTotal + upiTotal + creditTotal - expenseTotal - billTotal;
+
+    csv.push(["Cash","","",cashTotal]);
+    csv.push(["UPI","","",upiTotal]);
+    csv.push(["Credit","","",creditTotal]);
+    csv.push(["Expense","","",expenseTotal]);
+    csv.push(["Bill","","",billTotal]);
+    csv.push(["Profit","","",profit]);
+
+    const blob = new Blob([csv.map(e => e.join(",")).join("\n")], {type:"text/csv"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "profit_report.csv";
+    a.click();
+
+    URL.revokeObjectURL(url);
+};
+
+// INIT MONTH/YEAR
+const monthSelect = document.getElementById("monthSelect");
+const yearSelect = document.getElementById("yearSelect");
 
 const now = new Date();
-const currentMonth =
-String(now.getMonth()+1).padStart(2,"0");
-const currentYear =
-now.getFullYear();
 
-for(let y=2020;y<=currentYear+20;y++){
-
-yearSelect.innerHTML +=
-`<option value="${y}">${y}</option>`;
-
+for(let m=1;m<=12;m++){
+    monthSelect.innerHTML += `<option value="${String(m).padStart(2,"0")}">${m}</option>`;
 }
 
-monthSelect.value=currentMonth;
-yearSelect.value=currentYear;
+for(let y=2020;y<=now.getFullYear()+20;y++){
+    yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+}
 
-let cashTotal=0;
-let upiTotal=0;
-let creditTotal=0;
-let expenseTotal=0;
-let billTotal=0;
-document.getElementById("addBillBtn").onclick =
-async ()=>{
+monthSelect.value = String(now.getMonth()+1).padStart(2,"0");
+yearSelect.value = now.getFullYear();
 
-const month = monthSelect.value;
-const year = yearSelect.value;
+// LOAD
+document.getElementById("loadBtn").onclick = function(){
 
-const amt = prompt("Enter Bill Amount");
+    table.innerHTML = "";
+    rows = [];
 
-if(!amt || isNaN(amt)) return;
+    cashTotal = upiTotal = creditTotal = expenseTotal = billTotal = 0;
 
-const billRef =
-push(ref(db,`bills/${year}-${month}`));
+    const month = monthSelect.value;
+    const year = yearSelect.value;
 
-await set(billRef,{
-amount:Number(amt)
-});
+    const incomes = getData("incomes");
+    const expenses = getData("expenses");
+    const bills = getData("bills");
 
-alert("Bill Saved");
+    // INCOME
+    for(let date in incomes){
+        if(date.startsWith(`${year}-${month}`)){
+            incomes[date].forEach(i=>{
+                rows.push({
+                    date,
+                    title: i.method,
+                    type: i.method,
+                    amount: i.amount
+                });
 
+                if(i.method==="Cash") cashTotal += i.amount;
+                if(i.method==="UPI") upiTotal += i.amount;
+                if(i.method==="Credit") creditTotal += i.amount;
+            });
+        }
+    }
+
+    // EXPENSE
+    for(let date in expenses){
+        if(date.startsWith(`${year}-${month}`)){
+            expenses[date].forEach(e=>{
+                rows.push({
+                    date,
+                    title: e.note,
+                    type: "Expense",
+                    amount: e.amount
+                });
+
+                expenseTotal += e.amount;
+            });
+        }
+    }
+
+    // BILLS
+    const billKey = `${year}-${month}`;
+    if(bills[billKey]){
+        bills[billKey].forEach(b=>{
+            rows.push({
+                date: billKey,
+                title: "Bill",
+                type: "Bill",
+                amount: b.amount
+            });
+
+            billTotal += b.amount;
+        });
+    }
+
+    rows.sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+    if(rows.length===0){
+        document.getElementById("noData").style.display="block";
+        return;
+    }
+
+    document.getElementById("noData").style.display="none";
+    document.getElementById("summaryBox").style.display="block";
+    document.getElementById("addBillBtn").style.display="block";
+
+    rows.forEach(r=>{
+        const tr=document.createElement("tr");
+
+        tr.innerHTML=`
+        <td>
+            <div class="main-text">${r.title}</div>
+            <div class="sub-text">${r.type} • ${r.date}</div>
+        </td>
+        <td class="amount">
+            ${r.type==="Expense"||r.type==="Bill"?"-":"+"}₹${r.amount}
+        </td>
+        `;
+
+        table.appendChild(tr);
+    });
+
+    document.getElementById("cashTotal").innerText="₹"+cashTotal;
+    document.getElementById("upiTotal").innerText="₹"+upiTotal;
+    document.getElementById("creditTotal").innerText="₹"+creditTotal;
+    document.getElementById("expenseTotal").innerText="₹"+expenseTotal;
+    document.getElementById("billTotal").innerText="₹"+billTotal;
+
+    document.getElementById("profitTotal").innerText =
+        "₹"+(cashTotal+upiTotal+creditTotal-expenseTotal-billTotal);
 };
 
-document.getElementById("loadBtn").onclick =
-async ()=>{
+document.getElementById("addBillBtn").onclick=function(){
+    const amt=prompt("Enter Bill Amount");
+    if(!amt||isNaN(amt)) return;
 
-document.getElementById("summaryBox").style.display="none";
-document.getElementById("noData").style.display="none";
-document.getElementById("addBillBtn").style.display="none";
+    const month=monthSelect.value;
+    const year=yearSelect.value;
+    const key=`${year}-${month}`;
 
-table.innerHTML="";
+    let bills=getData("bills");
 
-cashTotal=0;
-upiTotal=0;
-creditTotal=0;
-expenseTotal=0;
-billTotal=0;
+    if(!bills[key]) bills[key]=[];
 
-const month = monthSelect.value;
-const year = yearSelect.value;
+    bills[key].push({amount:Number(amt)});
 
-let rows=[];
+    saveData("bills",bills);
 
-const incomeSnap =
-await get(ref(db,"incomes"));
-
-const expenseSnap =
-await get(ref(db,"expenses"));
-
-const billSnap =
-await get(ref(db,`bills/${year}-${month}`));
-
-if(incomeSnap.exists()){
-
-incomeSnap.forEach(dateNode=>{
-
-const date=dateNode.key;
-
-if(date.startsWith(`${year}-${month}`)){
-
-dateNode.forEach(item=>{
-
-const d=item.val();
-
-rows.push({
-date,
-title:d.method || "Income",
-type:d.method || "Income",
-amount:Number(d.amount)
-});
-
-if(d.method==="Cash")
-cashTotal += Number(d.amount);
-
-else if(d.method==="UPI")
-upiTotal += Number(d.amount);
-
-else if(d.method==="Credit")
-creditTotal += Number(d.amount);
-
-});
-
-}
-
-});
-
-}
-if(expenseSnap.exists()){
-
-expenseSnap.forEach(dateNode=>{
-
-const date=dateNode.key;
-
-if(date.startsWith(`${year}-${month}`)){
-
-dateNode.forEach(item=>{
-
-const d=item.val();
-
-rows.push({
-date,
-title:d.note || "Expense",
-type:"Expense",
-amount:Number(d.amount)
-});
-
-expenseTotal += Number(d.amount);
-
-});
-
-}
-
-});
-
-}
-
-if(billSnap.exists()){
-
-billSnap.forEach(item=>{
-
-const d=item.val();
-
-rows.push({
-date:`${year}-${month}`,
-title:"Bill",
-type:"Bill",
-amount:Number(d.amount)
-});
-
-billTotal += Number(d.amount);
-
-});
-
-}
-
-rows.sort((a,b)=>
-new Date(b.date)-new Date(a.date)
-);
-
-if(rows.length===0){
-
-document.getElementById("noData").style.display="block";
-return;
-
-}
-
-rows.forEach(r=>{
-
-const tr=document.createElement("tr");
-
-tr.innerHTML=`
-<td>
-<div class="main-text">${r.title}</div>
-<div class="sub-text">${r.type} • ${r.date}</div>
-</td>
-
-<td class="amount">
-${r.type==="Expense" || r.type==="Bill" ? "-" : "+"}
-₹${r.amount}
-</td>
-`;
-
-table.appendChild(tr);
-
-});
-
-document.getElementById("cashTotal").innerText =
-"₹"+cashTotal;
-
-document.getElementById("upiTotal").innerText =
-"₹"+upiTotal;
-
-document.getElementById("creditTotal").innerText =
-"₹"+creditTotal;
-
-document.getElementById("expenseTotal").innerText =
-"₹"+expenseTotal;
-
-document.getElementById("billTotal").innerText =
-"₹"+billTotal;
-
-document.getElementById("profitTotal").innerText =
-"₹"+(
-cashTotal +
-upiTotal +
-creditTotal -
-expenseTotal -
-billTotal
-);
-
-document.getElementById("summaryBox").style.display="block";
-document.getElementById("addBillBtn").style.display="block";
-
+    alert("Bill Saved");
 };
-
 </script>
 
 </body>

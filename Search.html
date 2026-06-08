@@ -24,16 +24,13 @@ body {
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     border-bottom:1px solid #e5e5e5;
     font-size:20px;
     font-weight:bold;
-
     position: sticky;
     top: 0;
     background: #fff;
     z-index: 1000;
-
     padding: 0 10px;
 }
 
@@ -159,7 +156,6 @@ body {
             <span id="creditTotal">0</span>
         </div>
 
-        <!-- ✅ NEW FIELD ADDED -->
         <div class="summary-row">
             <span>Expenses</span>
             <span id="expenseTotal">0</span>
@@ -174,29 +170,21 @@ body {
 
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getDatabase, ref, onValue }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+<script>
+const date =
+localStorage.getItem("date") ||
+new Date().toISOString().split("T")[0];
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
-  authDomain: "site-2a9d6.firebaseapp.com",
-  databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
-  projectId: "site-2a9d6",
-  storageBucket: "site-2a9d6.firebasestorage.app",
-  messagingSenderId: "1060812483121",
-  appId: "1:1060812483121:web:d2b173d180071145810310"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// DATE
-const date = localStorage.getItem("date") || new Date().toISOString().split("T")[0];
 document.getElementById("dateBox").innerText = date;
 
 const table = document.getElementById("entryTable");
+
+// LOAD DATA
+const incomes =
+JSON.parse(localStorage.getItem("incomes") || "{}");
+
+const expenses =
+JSON.parse(localStorage.getItem("expenses") || "{}");
 
 // TOTALS
 let cashTotal = 0;
@@ -205,7 +193,7 @@ let creditTotal = 0;
 let expenseTotal = 0;
 let incomeTotal = 0;
 
-function addRow(name, type, amount) {
+function addRow(name, type, amount){
 
     const row = document.createElement("tr");
 
@@ -214,55 +202,52 @@ function addRow(name, type, amount) {
             <span class="label-main">${name}</span>
             <span class="label-sub">${type}</span>
         </td>
-        <td class="amount">${type === "Expense" ? "- " : "+ "} ${amount}</td>
+        <td class="amount">
+            ${type === "Expense" ? "- " : "+ "}₹${amount}
+        </td>
     `;
 
     table.appendChild(row);
 
-    // income
+    // income breakdown
     if(type === "Cash") cashTotal += amount;
     else if(type === "UPI") upiTotal += amount;
     else if(type === "Credit") creditTotal += amount;
 
-    // expenses
     if(type === "Expense") expenseTotal += amount;
     else incomeTotal += amount;
 }
 
-// INCOME
-const incomeRef = ref(db, "incomes/" + date);
-onValue(incomeRef, (snap) => {
-    snap.forEach((c) => {
-        const d = c.val();
-        addRow(d.method || "Income", d.method || "Income", Number(d.amount));
+// INCOMES
+if(incomes[date]){
+    incomes[date].forEach(d => {
+        addRow(
+            d.method || "Income",
+            d.method || "Income",
+            Number(d.amount)
+        );
     });
-
-    updateSummary();
-});
-
-// EXPENSE
-const expenseRef = ref(db, "expenses/" + date);
-onValue(expenseRef, (snap) => {
-    snap.forEach((c) => {
-        const d = c.val();
-        addRow(d.note || "Expense", "Expense", Number(d.amount));
-    });
-
-    updateSummary();
-});
-
-function updateSummary() {
-
-    document.getElementById("cashTotal").innerText = cashTotal;
-    document.getElementById("upiTotal").innerText = upiTotal;
-    document.getElementById("creditTotal").innerText = creditTotal;
-
-    // NEW FIELD OUTPUT
-    document.getElementById("expenseTotal").innerText = expenseTotal;
-
-    const grand = incomeTotal - expenseTotal;
-    document.getElementById("grandTotal").innerText = grand;
 }
+
+// EXPENSES
+if(expenses[date]){
+    expenses[date].forEach(d => {
+        addRow(
+            d.note || "Expense",
+            "Expense",
+            Number(d.amount)
+        );
+    });
+}
+
+// UPDATE UI
+document.getElementById("cashTotal").innerText = cashTotal;
+document.getElementById("upiTotal").innerText = upiTotal;
+document.getElementById("creditTotal").innerText = creditTotal;
+document.getElementById("expenseTotal").innerText = expenseTotal;
+
+document.getElementById("grandTotal").innerText =
+incomeTotal - expenseTotal;
 </script>
 
 </body>

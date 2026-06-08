@@ -24,16 +24,13 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     border-bottom:1px solid #e5e5e5;
     font-size:20px;
     font-weight:bold;
-
     position: sticky;
     top: 0;
     background: #fff;
     z-index: 1000;
-
     padding: 0 10px;
 }
 
@@ -48,7 +45,6 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:2;
 }
 
 .nav-title{
@@ -132,6 +128,7 @@ body{
 }
 </style>
 </head>
+
 <body>
 
 <div class="navbar">
@@ -144,42 +141,27 @@ body{
     <button class="pill-btn" id="yearBtn">Year</button>
 </div>
 
-<!-- Month Selection -->
+<!-- MONTH -->
 <div class="overlay" id="monthOverlay">
     <div class="overlay-header">Select Month</div>
-
     <div class="options-grid" id="monthOptions"></div>
-
     <div class="overlay-footer">
         <button class="next-btn" id="monthNextBtn">Next</button>
     </div>
 </div>
 
-<!-- Year Selection -->
+<!-- YEAR -->
 <div class="overlay" id="yearOverlay">
     <div class="overlay-header">Select Year</div>
-
     <div class="options-grid" id="yearOptions"></div>
-
     <div class="overlay-footer">
         <button class="next-btn" id="yearNextBtn">Next</button>
     </div>
 </div>
 
 <script>
-
-const months = [
-    "Jan","Feb","Mar",
-    "Apr","May","Jun",
-    "Jul","Aug","Sep",
-    "Oct","Nov","Dec"
-];
-
-const years = [
-    "2024","2025","2026",
-    "2027","2028","2029",
-    "2030"
-];
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const years = ["2024","2025","2026","2027","2028","2029","2030"];
 
 let selectedMonth = "";
 let selectedYear = "";
@@ -194,26 +176,20 @@ const yearOverlay = document.getElementById("yearOverlay");
 const monthOptions = document.getElementById("monthOptions");
 const yearOptions = document.getElementById("yearOptions");
 
-const monthNextBtn = document.getElementById("monthNextBtn");
-const yearNextBtn = document.getElementById("yearNextBtn");
-
 function renderMonths(){
     monthOptions.innerHTML = "";
 
-    months.forEach(month => {
-
+    months.forEach((m, i) => {
         const div = document.createElement("div");
         div.className = "option-item";
-        div.textContent = month;
+        div.textContent = m;
 
         div.onclick = () => {
-
-            monthOptions
-                .querySelectorAll(".option-item")
-                .forEach(item => item.classList.remove("selected"));
+            document.querySelectorAll("#monthOptions .option-item")
+                .forEach(x => x.classList.remove("selected"));
 
             div.classList.add("selected");
-            selectedMonth = month;
+            selectedMonth = String(i + 1).padStart(2,"0");
         };
 
         monthOptions.appendChild(div);
@@ -223,20 +199,17 @@ function renderMonths(){
 function renderYears(){
     yearOptions.innerHTML = "";
 
-    years.forEach(year => {
-
+    years.forEach(y => {
         const div = document.createElement("div");
         div.className = "option-item";
-        div.textContent = year;
+        div.textContent = y;
 
         div.onclick = () => {
-
-            yearOptions
-                .querySelectorAll(".option-item")
-                .forEach(item => item.classList.remove("selected"));
+            document.querySelectorAll("#yearOptions .option-item")
+                .forEach(x => x.classList.remove("selected"));
 
             div.classList.add("selected");
-            selectedYear = year;
+            selectedYear = y;
         };
 
         yearOptions.appendChild(div);
@@ -247,70 +220,47 @@ renderMonths();
 renderYears();
 
 monthBtn.onclick = () => {
-
     reportType = "month";
-
     selectedMonth = "";
     selectedYear = "";
-
-    monthOptions
-        .querySelectorAll(".option-item")
-        .forEach(item => item.classList.remove("selected"));
-
-    yearOptions
-        .querySelectorAll(".option-item")
-        .forEach(item => item.classList.remove("selected"));
 
     monthOverlay.style.display = "block";
 };
 
 yearBtn.onclick = () => {
-
     reportType = "year";
-
     selectedYear = "";
-
-    yearOptions
-        .querySelectorAll(".option-item")
-        .forEach(item => item.classList.remove("selected"));
-
     yearOverlay.style.display = "block";
 };
 
-monthNextBtn.onclick = () => {
-
-    if(selectedMonth === ""){
+document.getElementById("monthNextBtn").onclick = () => {
+    if(!selectedMonth){
         alert("Please select a month");
         return;
     }
-
     monthOverlay.style.display = "none";
     yearOverlay.style.display = "block";
 };
 
-yearNextBtn.onclick = () => {
-
-    if(selectedYear === ""){
+document.getElementById("yearNextBtn").onclick = () => {
+    if(!selectedYear){
         alert("Please select a year");
         return;
     }
 
+    let report;
+
     if(reportType === "month"){
-
-        const report = selectedMonth + "/" + selectedYear;
-
-        localStorage.setItem("report", report);
-        localStorage.setItem("reportType", "month");
-
-    }else{
-
-        localStorage.setItem("report", selectedYear);
-        localStorage.setItem("reportType", "year");
+        report = `${selectedMonth}/${selectedYear}`;
+    } else {
+        report = `${selectedYear}`;
     }
+
+    localStorage.setItem("report", report);
+    localStorage.setItem("reportType", reportType);
 
     window.location.href = "review.html";
 };
-
 </script>
 
 </body>

@@ -22,16 +22,13 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     border-bottom:1px solid #e5e5e5;
     font-size:20px;
     font-weight:bold;
-
     position: sticky;
     top: 0;
     background: #fff;
     z-index: 1000;
-
     padding: 0 10px;
 }
 
@@ -192,27 +189,10 @@ body{
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getDatabase, ref, push, set }
-from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC2DkTGi6VnGxBU5vcmhdvSpeWZskVknqc",
-  authDomain: "site-2a9d6.firebaseapp.com",
-  databaseURL: "https://site-2a9d6-default-rtdb.firebaseio.com",
-  projectId: "site-2a9d6",
-  storageBucket: "site-2a9d6.firebasestorage.app",
-  messagingSenderId: "1060812483121",
-  appId: "1:1060812483121:web:d2b173d180071145810310"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
+<script>
 const saveBtn = document.getElementById("saveBtn");
 
-saveBtn.addEventListener("click", async () => {
+saveBtn.addEventListener("click", () => {
     const amount = document.getElementById("amount").value;
     const date = document.getElementById("date").value;
     const method = document.getElementById("method").value;
@@ -223,25 +203,33 @@ saveBtn.addEventListener("click", async () => {
         return;
     }
 
-    const dbRef = ref(db, "incomes/" + date);
-    const newEntry = push(dbRef);
+    // GET EXISTING DATA
+    let incomes = JSON.parse(localStorage.getItem("incomes")) || {};
 
-    await set(newEntry, {
+    // CREATE DATE ARRAY IF NOT EXISTS
+    if (!incomes[date]) {
+        incomes[date] = [];
+    }
+
+    // PUSH NEW ENTRY
+    incomes[date].push({
         amount: Number(amount),
         method: method,
         note: note,
-        
     });
 
-    document.getElementById("overlay").style.display = "flex";
+    // SAVE BACK
+    localStorage.setItem("incomes", JSON.stringify(incomes));
 
+    // UI RESET
+    document.getElementById("overlay").style.display = "flex";
     document.getElementById("amount").value = "";
     document.getElementById("note").value = "";
 });
 
-window.closeOverlay = function () {
+function closeOverlay() {
     document.getElementById("overlay").style.display = "none";
-};
+}
 </script>
 
 </body>
