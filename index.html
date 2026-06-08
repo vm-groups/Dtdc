@@ -259,7 +259,11 @@ function loadToday(){
     expenseList.forEach(e => addRow(e, "expense"));
 
     const profit = incomeTotal - expenseTotal;
-    document.getElementById("grandTotal").innerText = "+ ₹" + profit;
+
+document.getElementById("grandTotal").innerText =
+profit >= 0
+? "+ ₹" + profit
+: "- ₹" + Math.abs(profit);
 }
 
 loadToday();

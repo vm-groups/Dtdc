@@ -5,318 +5,557 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credits</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-    padding:16px;
-    background:#fff;
+padding:16px;
+background:#fff;
 }
 
 .navbar{
-    height:55px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #e5e5e5;
-    font-size:20px;
-    font-weight:bold;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1000;
-    padding: 0 10px;
+height:55px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #e5e5e5;
+font-size:20px;
+font-weight:bold;
+position:sticky;
+top:0;
+background:#fff;
+z-index:1000;
+padding:0 10px;
 }
 
 .back-btn{
-    width:40px;
-    height:40px;
-    border:1px solid #000;
-    border-radius:50%;
-    background:none;
-    font-size:22px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+width:40px;
+height:40px;
+border:1px solid #000;
+border-radius:50%;
+background:none;
+font-size:22px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .title{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:20px;
-    font-weight:bold;
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+font-size:20px;
+font-weight:bold;
 }
 
 .card{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 0;
-    border-bottom:1px solid #ddd;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #ddd;
 }
 
 .left{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
+display:flex;
+flex-direction:column;
+gap:4px;
 }
 
 .name{
-    font-size:18px;
+font-size:18px;
 }
 
 .meta{
-    font-size:13px;
-    color:#666;
+font-size:13px;
+color:#666;
 }
 
 .amount{
-    font-size:18px;
-    font-weight:bold;
+font-size:18px;
+font-weight:bold;
 }
 
-/* ICON BUTTONS */
 .btns{
-    display:flex;
-    gap:8px;
+display:flex;
+gap:8px;
+margin-top:8px;
 }
 
 .icon-btn{
-    width:36px;
-    height:36px;
-    border:1px solid #000;
-    border-radius:10px;
-    background:none;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+width:36px;
+height:36px;
+border:1px solid #000;
+border-radius:10px;
+background:none;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .icon-btn i{
-    font-size:14px;
+font-size:14px;
 }
 
 .empty{
-    text-align:center;
-    margin-top:40px;
-    color:#666;
-    font-size:18px;
+text-align:center;
+margin-top:40px;
+color:#666;
+font-size:18px;
 }
 
-/* popup */
 .popup{
-    position:fixed;
-    top:0;left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:2000;
 }
 
 .box{
-    background:#fff;
-    padding:15px;
-    width:90%;
-    max-width:320px;
-    border-radius:8px;
+background:#fff;
+padding:15px;
+width:90%;
+max-width:320px;
+border-radius:8px;
 }
 
-.box input, .box select{
-    width:100%;
-    padding:8px;
-    margin:8px 0;
+.box input,
+.box select{
+width:100%;
+padding:8px;
+margin:8px 0;
 }
+
 .box button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-
-    border:1px solid #000;
-    border-radius:12px;
-
-    background:#fff;
-    color:#000;
-
-    font-size:16px;
-    cursor:pointer;
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #000;
+border-radius:12px;
+background:#fff;
+font-size:16px;
+cursor:pointer;
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="navbar">
-    <button class="back-btn" onclick="window.location.href='index.html'">&larr;</button>
-    <div class="title">Credits</div>
+
+<button class="back-btn"
+onclick="window.location.href='index.html'">
+←
+</button>
+
+<div class="title">
+Credits
+</div>
+
 </div>
 
 <div id="list"></div>
-<div id="empty" class="empty" style="display:none;">No credits pending</div>
 
+<div id="empty"
+class="empty"
+style="display:none;">
+No credits pending
+</div>
 <!-- EDIT POPUP -->
+
 <div class="popup" id="popup">
-    <div class="box">
-        <input id="amt" type="number" placeholder="Amount">
-        <select id="mode">
-            <option value="Cash">Cash</option>
-            <option value="UPI">UPI</option>
-            <option value="Credit">Credit</option>
-        </select>
-        <input id="note" type="text" placeholder="Note">
-        <button onclick="saveEdit()">Save</button>
-    </div>
+
+<div class="box">
+
+<input
+id="amt"
+type="number"
+placeholder="Amount">
+
+<select id="mode">
+<option value="Cash">Cash</option>
+<option value="UPI">UPI</option>
+<option value="Credit">Credit</option>
+</select>
+
+<input
+id="note"
+type="text"
+placeholder="Note">
+
+<button onclick="saveEdit()">
+Save
+</button>
+
+</div>
+
+</div>
+
+<!-- DELETE POPUP -->
+
+<div class="popup" id="deletePopup">
+
+<div class="box">
+
+<h3 style="text-align:center;">
+Delete Credit?
+</h3>
+
+<p style="
+text-align:center;
+margin-top:10px;
+">
+Are you sure you want to delete this credit?
+</p>
+
+<button onclick="confirmDelete()">
+Yes
+</button>
+
+<button onclick="closeDeletePopup()">
+No
+</button>
+
+</div>
+
 </div>
 
 <script>
+
 function getData(key){
-    return JSON.parse(localStorage.getItem(key)) || {};
+
+return JSON.parse(
+localStorage.getItem(key)
+) || {};
+
 }
 
-function saveData(key, data){
-    localStorage.setItem(key, JSON.stringify(data));
+function saveData(key,data){
+
+localStorage.setItem(
+key,
+JSON.stringify(data)
+);
+
 }
 
 let editData = null;
+let deleteData = null;
 
-// LOAD
 function loadCredits(){
 
-    const list = document.getElementById("list");
-    const empty = document.getElementById("empty");
+const list =
+document.getElementById("list");
 
-    list.innerHTML = "";
+const empty =
+document.getElementById("empty");
 
-    const incomes = getData("incomes");
+list.innerHTML = "";
 
-    let credits = [];
+const incomes =
+getData("incomes");
 
-    for(const date in incomes){
-        incomes[date].forEach(item => {
-            if(item.method === "Credit"){
-                credits.push({
-                    ...item,
-                    date
-                });
-            }
-        });
-    }
+let credits = [];
 
-    if(credits.length === 0){
-        empty.style.display = "block";
-        return;
-    } else {
-        empty.style.display = "none";
-    }
+for(const date in incomes){
 
-    credits.sort((a,b)=> new Date(a.date) - new Date(b.date));
+incomes[date].forEach(item=>{
 
-    credits.forEach((item, index) => {
+if(item.method==="Credit"){
 
-        const div = document.createElement("div");
-        div.className = "card";
+credits.push({
+...item,
+date
+});
 
-        div.innerHTML = `
-            <div class="left">
-                <div class="name">${item.note || "Credit"}</div>
-                <div class="meta">${item.date}</div>
-            </div>
-
-            <div>
-                <div class="amount">₹${item.amount}</div>
-
-                <div class="btns">
-                    <button class="icon-btn edit-btn">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-
-                    <button class="icon-btn delete-btn">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-
-        // FIND ORIGINAL ITEM
-        div.querySelector(".edit-btn").onclick = () => editItem(item.date, item.amount, item.method, item.note);
-        div.querySelector(".delete-btn").onclick = () => deleteItem(item.date, item);
-
-        list.appendChild(div);
-    });
 }
 
-// DELETE
-function deleteItem(date, item){
+});
 
-    let incomes = getData("incomes");
+}
+if(credits.length===0){
 
-    incomes[date] = incomes[date].filter(i =>
-        !(i.amount === item.amount &&
-          i.note === item.note &&
-          i.method === item.method)
-    );
+empty.style.display =
+"block";
 
-    if(incomes[date].length === 0){
-        delete incomes[date];
-    }
+return;
 
-    saveData("incomes", incomes);
-    loadCredits();
+}else{
+
+empty.style.display =
+"none";
+
 }
 
-// EDIT
-function editItem(date, amount, method, note){
+credits.sort((a,b)=>
+new Date(a.date) -
+new Date(b.date)
+);
 
-    editData = {date, amount, method, note};
+credits.forEach(item=>{
 
-    document.getElementById("amt").value = amount;
-    document.getElementById("mode").value = method;
-    document.getElementById("note").value = note || "";
+const div =
+document.createElement("div");
 
-    document.getElementById("popup").style.display = "flex";
+div.className =
+"card";
+
+div.innerHTML = `
+
+<div class="left">
+
+<div class="name">
+${item.note || "Credit"}
+</div>
+
+<div class="meta">
+${item.date}
+</div>
+
+</div>
+
+<div>
+
+<div class="amount">
+₹${item.amount}
+</div>
+
+<div class="btns">
+
+<button
+class="icon-btn edit-btn">
+
+<i class="fa-solid fa-pen"></i>
+
+</button>
+
+<button
+class="icon-btn delete-btn">
+
+<i class="fa-solid fa-trash"></i>
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+div.querySelector(
+".edit-btn"
+).onclick = ()=>{
+
+editItem(
+item.date,
+item.amount,
+item.method,
+item.note
+);
+
+};
+
+div.querySelector(
+".delete-btn"
+).onclick = ()=>{
+
+deleteItem(
+item.date,
+item
+);
+
+};
+
+list.appendChild(div);
+
+});
+
 }
 
-// SAVE EDIT
+function deleteItem(
+date,
+item
+){
+
+deleteData = {
+date,
+item
+};
+
+document.getElementById(
+"deletePopup"
+).style.display =
+"flex";
+
+}
+
+function closeDeletePopup(){
+
+document.getElementById(
+"deletePopup"
+).style.display =
+"none";
+
+}
+function confirmDelete(){
+
+let incomes =
+getData("incomes");
+
+const date =
+deleteData.date;
+
+const item =
+deleteData.item;
+
+incomes[date] =
+incomes[date].filter(i=>
+
+!(
+
+i.amount === item.amount &&
+
+i.note === item.note &&
+
+i.method === item.method
+
+)
+
+);
+
+if(
+incomes[date].length === 0
+){
+
+delete incomes[date];
+
+}
+
+saveData(
+"incomes",
+incomes
+);
+
+closeDeletePopup();
+
+loadCredits();
+
+}
+
+function editItem(
+date,
+amount,
+method,
+note
+){
+
+editData = {
+date,
+amount,
+method,
+note
+};
+
+document.getElementById(
+"amt"
+).value = amount;
+
+document.getElementById(
+"mode"
+).value = method;
+
+document.getElementById(
+"note"
+).value =
+note || "";
+
+document.getElementById(
+"popup"
+).style.display =
+"flex";
+
+}
+
 function saveEdit(){
 
-    const incomes = getData("incomes");
+const incomes =
+getData("incomes");
 
-    const amount = Number(document.getElementById("amt").value);
-    const mode = document.getElementById("mode").value;
-    const note = document.getElementById("note").value;
+const amount =
+Number(
+document.getElementById(
+"amt"
+).value
+);
 
-    for(const date in incomes){
-        incomes[date].forEach(i => {
-            if(
-                i.amount === editData.amount &&
-                i.method === editData.method &&
-                i.note === editData.note
-            ){
-                i.amount = amount;
-                i.method = mode;
-                i.note = note;
-            }
-        });
-    }
+const mode =
+document.getElementById(
+"mode"
+).value;
 
-    saveData("incomes", incomes);
+const note =
+document.getElementById(
+"note"
+).value;
 
-    document.getElementById("popup").style.display = "none";
-    loadCredits();
+for(const date in incomes){
+
+incomes[date].forEach(i=>{
+
+if(
+
+i.amount === editData.amount &&
+
+i.method === editData.method &&
+
+i.note === editData.note
+
+){
+
+i.amount = amount;
+i.method = mode;
+i.note = note;
+
+}
+
+});
+
+}
+
+saveData(
+"incomes",
+incomes
+);
+
+document.getElementById(
+"popup"
+).style.display =
+"none";
+
+loadCredits();
+
 }
 
 loadCredits();
+
 </script>
 
 </body>

@@ -6,6 +6,7 @@
 <title>Report</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -14,7 +15,7 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#f5f5f5;
+background:#fff;
 }
 
 .navbar{
@@ -22,12 +23,28 @@ height:55px;
 display:flex;
 align-items:center;
 justify-content:center;
-background:#fff;
-border-bottom:1px solid #ddd;
-font-weight:bold;
-font-size:20px;
+border-bottom:1px solid #e5e5e5;
 position:sticky;
 top:0;
+background:#fff;
+z-index:1000;
+}
+
+.back-btn{
+position:absolute;
+left:10px;
+width:40px;
+height:40px;
+border:1px solid #000;
+border-radius:50%;
+background:#fff;
+font-size:22px;
+cursor:pointer;
+}
+
+.nav-title{
+font-size:22px;
+font-weight:bold;
 }
 
 .container{
@@ -35,11 +52,11 @@ padding:15px;
 }
 
 .summary{
-background:#fff;
-border-radius:12px;
+border:2px solid #000;
 padding:15px;
-margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
+border-radius:12px;
+margin-bottom:20px;
+background:#fff;
 }
 
 .sum-row{
@@ -49,40 +66,74 @@ padding:8px 0;
 }
 
 .total{
-font-size:20px;
-font-weight:bold;
 border-top:1px solid #ddd;
 margin-top:10px;
 padding-top:10px;
+font-size:18px;
+font-weight:bold;
+}
+
+.row-card{
+border:1px solid #ddd;
+border-radius:12px;
+padding:12px;
+margin-bottom:12px;
+}
+
+.entry-date{
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.entry-line{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.amount{
+font-size:16px;
+font-weight:bold;
 }
 
 .noData{
 text-align:center;
-padding:40px;
+padding:50px;
 color:#777;
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="navbar">Report</div>
+<div class="navbar">
+
+<button class="back-btn"
+onclick="window.location.href='View_Sorted.html'">
+←
+</button>
+
+<div class="nav-title">
+Report
+</div>
+
+</div>
 
 <div class="container">
 
 <div class="summary">
-<h3 id="title">Report</h3>
-
-<div class="sum-row">
-<span>UPI</span>
-<span id="upi">₹0</span>
-</div>
 
 <div class="sum-row">
 <span>Cash</span>
 <span id="cash">₹0</span>
 </div>
 
+<div class="sum-row">
+<span>UPI</span>
+<span id="upi">₹0</span>
+</div>
 <div class="sum-row">
 <span>Credit</span>
 <span id="credit">₹0</span>
@@ -110,87 +161,198 @@ color:#777;
 </div>
 
 <script>
-const incomes = JSON.parse(localStorage.getItem("incomes") || "{}");
-const expenses = JSON.parse(localStorage.getItem("expenses") || "{}");
 
-let totalUPI = 0;
+const incomes =
+JSON.parse(
+localStorage.getItem("incomes")
+|| "{}"
+);
+
+const expenses =
+JSON.parse(
+localStorage.getItem("expenses")
+|| "{}"
+);
+
 let totalCash = 0;
+let totalUPI = 0;
 let totalCredit = 0;
 let totalIncome = 0;
 let totalExpense = 0;
 
-const list = document.getElementById("list");
+const allRows = [];
 
-function addRow(date, name, type, amount){
+function addEntry(
+date,
+name,
+type,
+amount
+){
 
-const div = document.createElement("div");
+allRows.push({
+date,
+name,
+type,
+amount
+});
 
-div.style.background = "#fff";
-div.style.marginBottom = "10px";
-div.style.padding = "10px";
-div.style.borderRadius = "10px";
-
-div.innerHTML = `
-<b>${date}</b><br>
-${name} - ${type} - ₹${amount}
-`;
-
-list.appendChild(div);
 }
 
-// INCOME LOOP
 for(const date in incomes){
 
-const entries = incomes[date];
+incomes[date].forEach(item=>{
 
-entries.forEach(item => {
+const amount =
+Number(item.amount || 0);
 
-const amount = Number(item.amount || 0);
-const method = (item.method || "").toUpperCase();
+const method =
+(item.method || "")
+.toUpperCase();
 
 totalIncome += amount;
 
-if(method === "UPI") totalUPI += amount;
-else if(method === "CASH") totalCash += amount;
-else if(method === "CREDIT") totalCredit += amount;
+if(method==="CASH"){
+totalCash += amount;
+}
 
-addRow(date, item.note || "Income", method, amount);
+if(method==="UPI"){
+totalUPI += amount;
+}
+
+if(method==="CREDIT"){
+totalCredit += amount;
+}
+
+addEntry(
+date,
+item.note ||
+method ||
+"Income",
+method,
+amount
+);
 
 });
 
 }
-
-// EXPENSE LOOP
 for(const date in expenses){
 
-const entries = expenses[date];
+expenses[date].forEach(item=>{
 
-entries.forEach(item => {
-
-const amount = Number(item.amount || 0);
+const amount =
+Number(item.amount || 0);
 
 totalExpense += amount;
 
-addRow(date, item.note || "Expense", "EXPENSE", amount);
+addEntry(
+date,
+item.note ||
+"Expense",
+"EXPENSE",
+amount
+);
 
 });
 
 }
 
-// UI UPDATE
-document.getElementById("upi").innerText = "₹" + totalUPI;
-document.getElementById("cash").innerText = "₹" + totalCash;
-document.getElementById("credit").innerText = "₹" + totalCredit;
-document.getElementById("income").innerText = "₹" + totalIncome;
-document.getElementById("expense").innerText = "₹" + totalExpense;
+allRows.sort((a,b)=>{
 
-document.getElementById("profit").innerText =
-"₹" + (totalIncome - totalExpense);
+return new Date(b.date)
+-
+new Date(a.date);
 
-if(totalIncome === 0 && totalExpense === 0){
-document.getElementById("list").innerHTML =
+});
+
+const list =
+document.getElementById(
+"list"
+);
+
+allRows.forEach(item=>{
+
+const div =
+document.createElement("div");
+
+div.className =
+"row-card";
+
+const sign =
+item.type==="EXPENSE"
+? "-"
+: "+";
+
+div.innerHTML = `
+
+<div class="entry-date">
+${item.date}
+</div>
+
+<div class="entry-line">
+
+<div>
+${item.name}
+<br>
+<small>
+${item.type}
+</small>
+</div>
+
+<div class="amount">
+${sign} ₹${item.amount}
+</div>
+
+</div>
+
+`;
+
+list.appendChild(div);
+
+});
+
+document.getElementById(
+"cash"
+).innerText =
+"₹" + totalCash;
+
+document.getElementById(
+"upi"
+).innerText =
+"₹" + totalUPI;
+
+document.getElementById(
+"credit"
+).innerText =
+"₹" + totalCredit;
+document.getElementById(
+"income"
+).innerText =
+"₹" + totalIncome;
+
+document.getElementById(
+"expense"
+).innerText =
+"₹" + totalExpense;
+
+const profit =
+totalIncome -
+totalExpense;
+
+document.getElementById(
+"profit"
+).innerText =
+(profit < 0
+? "-₹" + Math.abs(profit)
+: "₹" + profit);
+
+if(allRows.length===0){
+
+list.innerHTML =
+
 "<div class='noData'>No Records Found</div>";
+
 }
+
 </script>
 
 </body>

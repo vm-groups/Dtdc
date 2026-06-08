@@ -1,184 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Income</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Income</title>
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-body{
-    background:#fff;
-}
+        body {
+            background: #fff;
+        }
 
-.navbar{
-    height:55px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #e5e5e5;
-    font-size:20px;
-    font-weight:bold;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1000;
-    padding: 0 10px;
-}
+        .navbar {
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 20px;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1000;
+            padding: 0 10px;
+        }
 
-.back-btn{
-    width:40px;
-    height:40px;
-    border:1px solid #000;
-    border-radius:50%;
-    background:none;
-    font-size:22px;
-    cursor:pointer;
-}
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
 
-.nav-title{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:22px;
-}
+        .nav-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+        }
 
-.container{
-    padding:25px;
-}
+        .container {
+            padding: 25px;
+        }
 
-.heading{
-    text-align:center;
-    font-size:42px;
-    margin-bottom:35px;
-}
+        .heading {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 35px;
+        }
 
-.label{
-    font-size:22px;
-    margin-bottom:10px;
-}
+        .label {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
 
-.input{
-    width:100%;
-    height:55px;
-    border:1px solid #000;
-    border-radius:30px;
-    padding:0 20px;
-    font-size:18px;
-    margin-bottom:30px;
-    outline:none;
-}
+        .input {
+            width: 100%;
+            height: 55px;
+            border: 1px solid #000;
+            border-radius: 30px;
+            padding: 0 20px;
+            font-size: 18px;
+            margin-bottom: 30px;
+            outline: none;
+        }
 
-.select-wrap{
-    position:relative;
-    margin-bottom:30px;
-}
+        .select-wrap {
+            position: relative;
+            margin-bottom: 30px;
+        }
 
-.select{
-    width:100%;
-    height:55px;
-    border:1px solid #000;
-    border-radius:30px;
-    padding:0 20px;
-    font-size:18px;
-    appearance:none;
-    background:none;
-    outline:none;
-}
+        .select {
+            width: 100%;
+            height: 55px;
+            border: 1px solid #000;
+            border-radius: 30px;
+            padding: 0 20px;
+            font-size: 18px;
+            appearance: none;
+            background: none;
+            outline: none;
+        }
 
-.arrow{
-    position:absolute;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-    pointer-events:none;
-}
+        .arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
 
-.save-btn{
-    width:130px;
-    height:55px;
-    border:1px solid #000;
-    border-radius:30px;
-    background:none;
-    font-size:22px;
-    cursor:pointer;
-}
+        .save-btn {
+            width: 130px;
+            height: 55px;
+            border: 1px solid #000;
+            border-radius: 30px;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
 
-.save-wrap{
-    display:flex;
-    justify-content:center;
-}
+        .save-wrap {
+            display: flex;
+            justify-content: center;
+        }
 
-/* overlay */
-#overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
-}
+        /* overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
 
-.popup{
-    background:#fff;
-    padding:25px;
-    border-radius:15px;
-    text-align:center;
-    width:250px;
-}
-</style>
+        .popup {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            width: 250px;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="navbar">
-    <button class="back-btn" onclick="window.location.href='index.html'">←</button>
-    <div class="nav-title">Add Income</div>
-</div>
-
-<div class="container">
-
-    <div class="heading">Add Income</div>
-
-    <div class="label">Amount</div>
-    <input class="input" type="number" id="amount">
-
-    <div class="label">Date</div>
-    <input class="input" type="date" id="date">
-
-    <div class="label">Method</div>
-    <div class="select-wrap">
-        <select class="select" id="method">
-            <option>Cash</option>
-            <option>UPI</option>
-            <option>Credit</option>
-        </select>
-        <span class="arrow">▼</span>
+    <div class="navbar">
+        <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+        <div class="nav-title">Add Income</div>
     </div>
 
-    <div class="label">Note</div>
-    <input class="input" type="text" id="note">
+    <div class="container">
 
-    <div class="save-wrap">
-        <button class="save-btn" id="saveBtn">Save</button>
-    </div>
+        <div class="heading">Add Income</div>
+
+        <div class="label">Amount</div>
+        <input class="input" type="number" id="amount">
+
+        <div class="label">Date</div>
+        <input class="input" type="date" id="date">
+
+        <div class="label">Method</div>
+        <div class="select-wrap">
+            <select class="select" id="method">
+                <option>Cash</option>
+                <option>UPI</option>
+                <option>Credit</option>
+            </select>
+            <span class="arrow">▼</span>
+        </div>
+
+<div class="label">Extra Details</div>
+
+<div id="extraFields"></div>
+
+<div style="text-align:center;margin-bottom:30px;">
+
+<button id="addFieldBtn"
+style="
+width:55px;
+height:55px;
+border:1px solid #000;
+border-radius:50%;
+background:none;
+font-size:28px;
+cursor:pointer;
+">
++
+</button>
 
 </div>
-
-<!-- overlay -->
-<div id="overlay">
-  <div class="popup">
-    <h2>Saved Successfully</h2>
-    <button onclick="closeOverlay()" style="
+    <!-- overlay -->
+    <div id="overlay">
+        <div class="popup">
+            <h2>Saved Successfully</h2>
+            <button onclick="closeOverlay()" style="
       margin-top:15px;
       padding:10px 20px;
       border:1px solid #000;
@@ -186,51 +198,273 @@ body{
       border-radius:20px;
       cursor:pointer;
     ">OK</button>
-  </div>
+        </div>
+    </div>
+    <div id="fieldPopup"
+style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+">
+
+<div
+style="
+background:#fff;
+padding:20px;
+border-radius:15px;
+width:300px;
+">
+
+<h3 style="margin-bottom:15px;">
+Select Fields
+</h3>
+
+<label>
+<input type="checkbox" id="trackingCheck">
+ Tracking ID
+</label>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="cityCheck">
+ City
+</label>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="customerCheck">
+ Customer Name
+</label>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="phoneCheck">
+ Phone
+</label>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="parcelCheck">
+ Parcel Count
+</label>
+
+<br><br>
+
+<button id="createFields"
+style="
+width:100%;
+height:50px;
+border:1px solid #000;
+border-radius:25px;
+background:none;
+cursor:pointer;
+">
+OK
+</button>
+
 </div>
 
-<script>
-const saveBtn = document.getElementById("saveBtn");
 
-saveBtn.addEventListener("click", () => {
-    const amount = document.getElementById("amount").value;
-    const date = document.getElementById("date").value;
-    const method = document.getElementById("method").value;
-    const note = document.getElementById("note").value;
+</div>
+<div class="save-wrap">
+    <button class="save-btn" id="saveBtn">
+        Save
+    </button>
+</div>
 
-    if (!amount || !date) {
-        alert("Amount and Date required");
-        return;
+</div>
+    <script>
+        const addFieldBtn =
+document.getElementById("addFieldBtn");
+
+const fieldPopup =
+document.getElementById("fieldPopup");
+
+const extraFields =
+document.getElementById("extraFields");
+
+addFieldBtn.onclick = () => {
+
+fieldPopup.style.display = "flex";
+
+};
+
+document.getElementById(
+"createFields"
+).onclick = () => {
+
+extraFields.innerHTML = "";
+
+function addField(id,label){
+
+if(
+document.getElementById(id)
+.checked
+){
+
+extraFields.innerHTML += `
+
+<div class="label">
+${label}
+</div>
+
+<input
+class="input extra-input"
+data-name="${label}"
+placeholder="${label}">
+
+`;
+
+}
+
+}
+
+addField(
+"trackingCheck",
+"Tracking ID"
+);
+
+addField(
+"cityCheck",
+"City"
+);
+
+addField(
+"customerCheck",
+"Customer Name"
+);
+
+addField(
+"phoneCheck",
+"Phone"
+);
+
+addField(
+"parcelCheck",
+"Parcel Count"
+);
+
+fieldPopup.style.display = "none";
+
+};
+
+fieldPopup.onclick = e => {
+
+if(e.target === fieldPopup){
+
+fieldPopup.style.display = "none";
+
+}
+
+};
+        saveBtn.addEventListener("click", () => {
+            const amount = document.getElementById("amount").value;
+            const date = document.getElementById("date").value;
+            const method = document.getElementById("method").value;
+           let trackingId = "";
+let city = "";
+let customerName = "";
+let phone = "";
+let parcelCount = "";
+
+document
+.querySelectorAll(".extra-input")
+.forEach(input => {
+
+    const name =
+    input.dataset.name;
+
+    if(name === "Tracking ID"){
+        trackingId = input.value;
     }
 
-    // GET EXISTING DATA
-    let incomes = JSON.parse(localStorage.getItem("incomes")) || {};
-
-    // CREATE DATE ARRAY IF NOT EXISTS
-    if (!incomes[date]) {
-        incomes[date] = [];
+    if(name === "City"){
+        city = input.value;
     }
 
-    // PUSH NEW ENTRY
-    incomes[date].push({
-        amount: Number(amount),
-        method: method,
-        note: note,
-    });
+    if(name === "Customer Name"){
+        customerName = input.value;
+    }
 
-    // SAVE BACK
-    localStorage.setItem("incomes", JSON.stringify(incomes));
+    if(name === "Phone"){
+        phone = input.value;
+    }
 
-    // UI RESET
-    document.getElementById("overlay").style.display = "flex";
-    document.getElementById("amount").value = "";
-    document.getElementById("note").value = "";
+    if(name === "Parcel Count"){
+        parcelCount = input.value;
+    }
+
 });
 
-function closeOverlay() {
-    document.getElementById("overlay").style.display = "none";
-}
-</script>
+            document
+                .querySelectorAll(
+                    ".extra-input"
+                )
+                .forEach(input => {
+
+                    extra[
+                        input.dataset.name
+                    ] = input.value;
+
+                });
+
+            if (!amount || !date) {
+                alert("Amount and Date required");
+                return;
+            }
+
+            // GET EXISTING DATA
+            let incomes = JSON.parse(localStorage.getItem("incomes")) || {};
+
+            // CREATE DATE ARRAY IF NOT EXISTS
+            if (!incomes[date]) {
+                incomes[date] = [];
+            }
+
+            // PUSH NEW ENTRY
+            incomes[date].push({
+
+    amount:Number(amount),
+
+    method:method,
+
+    trackingId:trackingId,
+
+    city:city,
+
+    customerName:customerName,
+
+    phone:phone,
+
+    parcelCount:parcelCount
+
+});
+
+            // SAVE BACK
+            localStorage.setItem("incomes", JSON.stringify(incomes));
+
+            // UI RESET
+            document.getElementById("overlay").style.display = "flex";
+            document.getElementById("amount").value = "";
+            extraFields.innerHTML = "";
+        });
+
+        function closeOverlay() {
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
 
 </body>
+
 </html>
