@@ -285,6 +285,7 @@ OK
 
 </div>
     <script>
+        const saveBtn = document.getElementById("saveBtn");
         const addFieldBtn =
 document.getElementById("addFieldBtn");
 
@@ -407,17 +408,7 @@ document
 
 });
 
-            document
-                .querySelectorAll(
-                    ".extra-input"
-                )
-                .forEach(input => {
-
-                    extra[
-                        input.dataset.name
-                    ] = input.value;
-
-                });
+            
 
             if (!amount || !date) {
                 alert("Amount and Date required");

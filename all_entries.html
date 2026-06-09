@@ -1,376 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>All Entries</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>All Entries</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+        body {
+            background: #fff;
+        }
 
-body{
-background:#fff;
-}
+        .navbar {
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1000;
+            padding: 0 10px;
+        }
 
-.navbar{
-height:55px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-border-bottom:1px solid #e5e5e5;
-position:sticky;
-top:0;
-background:#fff;
-z-index:1000;
-padding:0 10px;
-}
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
 
-.back-btn{
-width:40px;
-height:40px;
-border:1px solid #000;
-border-radius:50%;
-background:none;
-font-size:22px;
-cursor:pointer;
-}
+        .nav-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            font-weight: bold;
+        }
 
-.nav-title{
-position:absolute;
-left:50%;
-transform:translateX(-50%);
-font-size:22px;
-font-weight:bold;
-}
+        .container {
+            padding: 15px;
+        }
 
-.container{
-padding:15px;
-}
+        .day-card {
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
 
-.day-card{
-border:1px solid #ddd;
-padding:12px;
-margin-bottom:20px;
-border-radius:12px;
-}
+        .day-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
 
-.day-title{
-font-size:20px;
-font-weight:bold;
-margin-bottom:12px;
-}
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-.row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px 0;
-border-bottom:1px solid #eee;
-}
+        .left {
+            display: flex;
+            flex-direction: column;
+        }
 
-.left{
-display:flex;
-flex-direction:column;
-}
+        .title {
+            font-size: 16px;
+        }
 
-.title{
-font-size:16px;
-}
+        .mode {
+            font-size: 12px;
+            color: #666;
+        }
 
-.mode{
-font-size:12px;
-color:#666;
-}
+        .right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.right{
-display:flex;
-align-items:center;
-gap:10px;
-}
+        .amount {
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-.amount{
-font-size:16px;
-font-weight:bold;
-}
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #000;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+        }
 
-.action-btn{
-width:32px;
-height:32px;
-border:1px solid #000;
-border-radius:8px;
-background:#fff;
-cursor:pointer;
-}
+        .summary-box {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
 
-.summary-box{
-margin-top:10px;
-padding-top:10px;
-border-top:1px solid #ddd;
-}
+        .summary-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
 
-.summary-title{
-text-align:center;
-font-weight:bold;
-margin-bottom:8px;
-}
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+        }
 
-.summary-row{
-display:flex;
-justify-content:space-between;
-padding:3px 0;
-}
+        .month-box,
+        .year-box {
+            border: 2px solid #000;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
 
-.month-box,
-.year-box{
-border:2px solid #000;
-padding:15px;
-margin-top:20px;
-border-radius:12px;
-}
+        .big-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
 
-.big-title{
-text-align:center;
-font-size:20px;
-font-weight:bold;
-margin-bottom:12px;
-}
-.summary-profit{
-display:flex;
-justify-content:space-between;
-padding-top:8px;
-margin-top:8px;
-border-top:1px solid #ddd;
-font-weight:bold;
-}
+        .summary-profit {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top: 1px solid #ddd;
+            font-weight: bold;
+        }
 
-.popup{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.5);
-display:none;
-align-items:center;
-justify-content:center;
-}
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
 
-.box{
-background:#fff;
-padding:15px;
-width:90%;
-max-width:320px;
-border-radius:10px;
-}
+        .box {
+            background: #fff;
+            padding: 15px;
+            width: 90%;
+            max-width: 320px;
+            border-radius: 10px;
+        }
 
-.box input,
-.box select{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border:1px solid #000;
-border-radius:8px;
-}
+        .box input,
+        .box select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #000;
+            border-radius: 8px;
+        }
 
-.box button{
-width:100%;
-padding:12px;
-border:1px solid #000;
-background:#fff;
-border-radius:12px;
-cursor:pointer;
-}
+        .box button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+        }
 
-.no-data{
-text-align:center;
-padding:40px;
-color:#777;
-}
-
-</style>
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="navbar">
-<button class="back-btn"
-onclick="history.back()">←</button>
+    <div class="navbar">
+        <button class="back-btn" onclick="history.back()">←</button>
 
-<div class="nav-title">
-All Entries
-</div>
-</div>
+        <div class="nav-title">
+            All Entries
+        </div>
+    </div>
 
-<div class="container" id="content"></div>
+    <div class="container" id="content"></div>
 
-<div class="popup" id="popup">
+    <div class="popup" id="popup">
 
-<div class="box">
+        <div class="box">
 
-<input type="number"
-id="editAmount"
-placeholder="Amount">
+            <input type="number" id="editAmount" placeholder="Amount">
 
-<select id="editMethod">
+            <select id="editMethod">
 
-<option value="Cash">Cash</option>
-<option value="UPI">UPI</option>
-<option value="Credit">Credit</option>
-<option value="Expense">Expense</option>
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Credit">Credit</option>
+                <option value="Expense">Expense</option>
 
-</select>
+            </select>
 
-<input type="text"
-id="editNote"
-placeholder="Note">
+            <input type="text" id="editNote" placeholder="Note">
 
-<button onclick="saveEdit()">
-Save
-</button>
+            <button onclick="saveEdit()">
+                Save
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </div>
+    <div class="popup" id="deletePopup">
 
-<script>
-    const content =
-document.getElementById("content");
+        <div class="box">
 
-function getData(key){
-return JSON.parse(
-localStorage.getItem(key)
-) || {};
-}
+            <h3 style="text-align:center;margin-bottom:15px;">
+                Do you want to delete?
+            </h3>
 
-function saveData(key,data){
-localStorage.setItem(
-key,
-JSON.stringify(data)
-);
-}
+            <div style="
+display:flex;
+gap:10px;
+">
 
-let editInfo = null;
+                <button onclick="confirmDelete()">
+                    Yes
+                </button>
 
-function loadData(){
+                <button onclick="
+document.getElementById(
+'deletePopup'
+).style.display='none'
+">
+                    No
+                </button>
 
-content.innerHTML = "";
+            </div>
 
-const incomes =
-getData("incomes");
+        </div>
 
-const expenses =
-getData("expenses");
+    </div>
+    <script>
+        const content =
+            document.getElementById("content");
 
-let days = {};
+        function getData(key) {
+            return JSON.parse(
+                localStorage.getItem(key)
+            ) || {};
+        }
 
-for(const date in incomes){
+        function saveData(key, data) {
+            localStorage.setItem(
+                key,
+                JSON.stringify(data)
+            );
+        }
 
-if(!days[date]){
-days[date] = [];
-}
+        let editInfo = null;
+        let deleteInfo = null;
 
-incomes[date].forEach(item=>{
+        function loadData() {
 
-days[date].push({
-...item,
-entryType:"income"
-});
+            content.innerHTML = "";
 
-});
+            const incomes =
+                getData("incomes");
 
-}
+            const expenses =
+                getData("expenses");
 
-for(const date in expenses){
+            let days = {};
 
-if(!days[date]){
-days[date] = [];
-}
+            for (const date in incomes) {
 
-expenses[date].forEach(item=>{
+                if (!days[date]) {
+                    days[date] = [];
+                }
 
-days[date].push({
-...item,
-entryType:"expense"
-});
+                incomes[date].forEach(item => {
 
-});
+                    days[date].push({
+                        ...item,
+                        entryType: "income"
+                    });
 
-}
+                });
 
-const dates =
-Object.keys(days)
-.sort()
-.reverse();
+            }
 
-if(dates.length===0){
 
-content.innerHTML=
-'<div class="no-data">No Entries</div>';
+            for (const date in expenses) {
 
-return;
-}
+                if (!days[date]) {
+                    days[date] = [];
+                }
 
-let yearCash=0;
-let yearUPI=0;
-let yearCredit=0;
-let yearExpense=0;
-dates.forEach(date=>{
+                expenses[date].forEach(item => {
 
-let cash=0;
-let upi=0;
-let credit=0;
-let expense=0;
+                    days[date].push({
+                        ...item,
+                        entryType: "expense"
+                    });
 
-const card =
-document.createElement("div");
+                });
 
-card.className="day-card";
+            }
 
-let html=`
+
+            const dates =
+                Object.keys(days)
+                    .sort()
+                    .reverse();
+
+            if (dates.length === 0) {
+
+                content.innerHTML =
+                    '<div class="no-data">No Entries</div>';
+
+                return;
+            }
+
+            let yearCash = 0;
+            let yearUPI = 0;
+            let yearCredit = 0;
+            let yearExpense = 0;
+            dates.forEach(date => {
+
+                let cash = 0;
+                let upi = 0;
+                let credit = 0;
+                let expense = 0;
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "day-card";
+
+                let html = `
 <div class="day-title">
 ${date}
 </div>
 `;
 
-days[date].forEach(item=>{
+                days[date].forEach((item, index) => {
 
-const amount =
-Number(item.amount);
+                    const amount =
+                        Number(item.amount);
 
-if(item.entryType==="income"){
+                    if (item.entryType === "income") {
 
-if(item.method==="Cash"){
-cash+=amount;
-yearCash+=amount;
-}
+                        if (item.method === "Cash") {
+                            cash += amount;
+                            yearCash += amount;
+                        }
 
-if(item.method==="UPI"){
-upi+=amount;
-yearUPI+=amount;
-}
+                        if (item.method === "UPI") {
+                            upi += amount;
+                            yearUPI += amount;
+                        }
 
-if(item.method==="Credit"){
-credit+=amount;
-yearCredit+=amount;
-}
+                        if (item.method === "Credit") {
+                            credit += amount;
+                            yearCredit += amount;
+                        }
 
-}else{
+                    } else {
 
-expense+=amount;
-yearExpense+=amount;
+                        expense += amount;
+                        yearExpense += amount;
 
-}
+                    }
 
-html+=`
+                    html += `
 
 <div class="row">
 
@@ -387,10 +413,10 @@ ${item.entryType}
 <div class="right">
 
 <div class="amount">
-${item.entryType==="income"
-? "+"
-: "-"
-}
+${item.entryType === "income"
+                            ? "+"
+                            : "-"
+                        }
 ₹${amount}
 </div>
 
@@ -398,7 +424,7 @@ ${item.entryType==="income"
 class="action-btn"
 onclick="editEntry(
 '${date}',
-'${item.time}',
+${index},
 '${item.entryType}'
 )">
 <i class="fa-solid fa-pen"></i>
@@ -408,7 +434,7 @@ onclick="editEntry(
 class="action-btn"
 onclick="deleteEntry(
 '${date}',
-'${item.time}',
+${index},
 '${item.entryType}'
 )">
 <i class="fa-solid fa-trash"></i>
@@ -419,11 +445,11 @@ onclick="deleteEntry(
 
 `;
 
-});
-const profit =
-cash + upi + credit - expense;
+                });
+                const profit =
+                    cash + upi + credit - expense;
 
-html+=`
+                html += `
 
 <div class="summary-box">
 
@@ -460,19 +486,19 @@ Day Summary
 
 `;
 
-card.innerHTML = html;
+                card.innerHTML = html;
 
-content.appendChild(card);
+                content.appendChild(card);
 
-});
+            });
 
-const yearProfit =
-yearCash +
-yearUPI +
-yearCredit -
-yearExpense;
+            const yearProfit =
+                yearCash +
+                yearUPI +
+                yearCredit -
+                yearExpense;
 
-content.innerHTML += `
+            content.innerHTML += `
 
 <div class="year-box">
 
@@ -509,120 +535,133 @@ Year Summary
 
 `;
 
-}
-window.deleteEntry =
-function(date,time,type){
+        }
+        window.deleteEntry = function (date, index, type) {
 
-const key =
-type==="income"
-? "incomes"
-: "expenses";
+            deleteInfo = {
+                date,
+                index,
+                type
+            };
 
-let data =
-getData(key);
+            document.getElementById(
+                "deletePopup"
+            ).style.display = "flex";
 
-data[date] =
-data[date].filter(
-x => x.time != time
-);
+        };
+        window.confirmDelete = function () {
 
-saveData(key,data);
+            const key =
+                deleteInfo.type === "income"
+                    ? "incomes"
+                    : "expenses";
 
-loadData();
-};
+            let data = getData(key);
 
-window.editEntry =
-function(date,time,type){
+            data[deleteInfo.date].splice(
+                deleteInfo.index,
+                1
+            );
 
-editInfo = {
-date,time,type
-};
+            saveData(key, data);
 
-const data =
-getData(
-type==="income"
-? "incomes"
-: "expenses"
-);
+            document.getElementById(
+                "deletePopup"
+            ).style.display = "none";
 
-const item =
-data[date].find(
-x => x.time == time
-);
+            loadData();
 
-document.getElementById(
-"editAmount"
-).value = item.amount;
+        };
 
-document.getElementById(
-"editNote"
-).value =
-item.note || "";
+        window.editEntry =
+            function (date, index, type) {
 
-document.getElementById(
-"editMethod"
-).value =
-item.method ||
-"Expense";
+                editInfo = {
+                    date,
+                    index,
+                    type
+                };
 
-document.getElementById(
-"popup"
-).style.display =
-"flex";
-};
+                const data =
+                    getData(
+                        type === "income"
+                            ? "incomes"
+                            : "expenses"
+                    );
 
-window.saveEdit =
-function(){
+                const item =
+                    data[date][index];
 
-const key =
-editInfo.type==="income"
-? "incomes"
-: "expenses";
+                document.getElementById(
+                    "editAmount"
+                ).value = item.amount;
 
-let data =
-getData(key);
+                document.getElementById(
+                    "editNote"
+                ).value =
+                    item.note || "";
 
-const item =
-data[editInfo.date]
-.find(
-x => x.time ==
-editInfo.time
-);
+                document.getElementById(
+                    "editMethod"
+                ).value =
+                    item.method || "Expense";
 
-item.amount =
-Number(
-document.getElementById(
-"editAmount"
-).value
-);
+                document.getElementById(
+                    "popup"
+                ).style.display =
+                    "flex";
 
-item.note =
-document.getElementById(
-"editNote"
-).value;
+            };
+        window.saveEdit =
+            function () {
 
-if(editInfo.type==="income"){
+                const key =
+                    editInfo.type === "income"
+                        ? "incomes"
+                        : "expenses";
 
-item.method =
-document.getElementById(
-"editMethod"
-).value;
+                let data =
+                    getData(key);
 
-}
+                const item =
+                    data[editInfo.date]
+                    [editInfo.index];
 
-saveData(key,data);
+                item.amount =
+                    Number(
+                        document.getElementById(
+                            "editAmount"
+                        ).value
+                    );
 
-document.getElementById(
-"popup"
-).style.display =
-"none";
+                item.note =
+                    document.getElementById(
+                        "editNote"
+                    ).value;
 
-loadData();
+                if (editInfo.type === "income") {
 
-};
+                    item.method =
+                        document.getElementById(
+                            "editMethod"
+                        ).value;
 
-loadData();
+                }
 
-</script>
+                saveData(key, data);
+
+                document.getElementById(
+                    "popup"
+                ).style.display =
+                    "none";
+
+                loadData();
+
+            };
+
+        loadData();
+
+    </script>
 </body>
+
 </html>
