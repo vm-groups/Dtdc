@@ -15,34 +15,33 @@
 }
 
 body{
-    background:#fff;
+    background:#000;
+    color:#fff;
 }
+
+/* NAVBAR */
 
 .navbar{
     height:55px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-
-    border-bottom:1px solid #e5e5e5;
-    font-size:20px;
-    font-weight:bold;
-
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1000;
-
-    padding: 0 10px;
+    background:#673ab7;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    padding:0 10px;
 }
 
 .back-btn{
     width:40px;
     height:40px;
-    border:1px solid #000;
+    border:none;
     border-radius:50%;
-    background:none;
+    background:#fff;
+    color:#673ab7;
     font-size:22px;
+    font-weight:bold;
     cursor:pointer;
 }
 
@@ -51,23 +50,37 @@ body{
     left:50%;
     transform:translateX(-50%);
     font-size:22px;
+    font-weight:bold;
+    color:#fff;
 }
+
+/* BUTTON AREA */
 
 .type-buttons{
     display:flex;
     justify-content:center;
     gap:20px;
-    margin-top:60px;
+    margin-top:80px;
+    padding:0 20px;
 }
 
+/* ENTRY BUTTONS */
+
 .type-btn{
-    width:150px;
-    height:65px;
-    border:1px solid #000;
-    background:none;
+    width:160px;
+    height:70px;
+    border:none;
     border-radius:35px;
+    background:#673ab7;
+    color:#fff;
     font-size:22px;
+    font-weight:bold;
     cursor:pointer;
+    transition:.2s;
+}
+
+.type-btn:active{
+    transform:scale(.97);
 }
 
 </style>

@@ -6,24 +6,220 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>All Expenses</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{padding-bottom:70px}
-.navbar{height:55px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ddd;position:sticky;top:0;background:#fff}
-.back{position:absolute;left:10px;width:40px;height:40px;border:1px solid #000;border-radius:50%;background:#fff}
-.filters{display:flex;gap:8px;padding:12px;position:sticky;top:55px;background:#fff;border-bottom:1px solid #eee}
-.filters button{flex:1;height:42px;border:1px solid #000;border-radius:10px;background:#fff}
-.active{background:#000!important;color:#fff}
-.container{padding:15px}
-.day{border:1px solid #ddd;border-radius:12px;padding:12px;margin-bottom:15px;animation:fade .25s}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.date{font-weight:bold;font-size:18px;margin-bottom:10px}
-.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
-.sum{display:flex;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid #ddd;font-weight:bold}
-.bottom{position:fixed;bottom:0;left:0;width:100%;height:60px;border-top:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
-.popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
-.box{background:#fff;padding:15px;width:90%;max-width:320px;border-radius:12px}
-select,button.show{width:100%;height:45px;margin-top:10px}
-.msg{text-align:center;padding:50px 10px;color:#666}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#000;
+color:#fff;
+padding-bottom:70px;
+}
+
+/* NAVBAR */
+
+.navbar{
+height:55px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#673ab7;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.back{
+position:absolute;
+left:10px;
+width:40px;
+height:40px;
+border:none;
+border-radius:50%;
+background:#fff;
+color:#673ab7;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* FILTERS */
+
+.filters{
+display:flex;
+gap:8px;
+padding:12px;
+position:sticky;
+top:55px;
+background:#000;
+border-bottom:1px solid #222;
+}
+
+.filters button{
+flex:1;
+height:42px;
+border:2px solid #673ab7;
+border-radius:10px;
+background:#111;
+color:#fff;
+cursor:pointer;
+}
+
+.active{
+background:#673ab7!important;
+color:#fff!important;
+}
+
+/* CONTENT */
+
+.container{
+padding:15px;
+}
+
+.day{
+background:#111;
+border:2px solid #673ab7;
+border-radius:16px;
+padding:15px;
+margin-bottom:15px;
+animation:fade .25s;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(8px);
+}
+to{
+opacity:1;
+transform:none;
+}
+}
+
+.date{
+font-weight:bold;
+font-size:18px;
+margin-bottom:10px;
+text-align:center;
+color:#fff;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid #222;
+}
+
+.row span{
+color:#fff;
+}
+
+.row b{
+color:#ff5252;
+}
+
+.sum{
+display:flex;
+justify-content:space-between;
+padding-top:10px;
+margin-top:10px;
+border-top:1px solid #673ab7;
+font-weight:bold;
+}
+
+.sum span:last-child{
+color:#ff5252;
+}
+
+/* GRAND TOTAL */
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:60px;
+background:#111;
+border-top:2px solid #673ab7;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:18px;
+color:#fff;
+}
+
+#gt{
+color:#ff5252;
+margin-left:5px;
+}
+
+/* POPUPS */
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.box{
+background:#111;
+padding:20px;
+width:90%;
+max-width:320px;
+border-radius:15px;
+border:2px solid #673ab7;
+}
+
+.box h3{
+text-align:center;
+margin-bottom:10px;
+color:#fff;
+}
+
+select{
+width:100%;
+height:48px;
+margin-top:10px;
+padding:0 10px;
+background:#000;
+color:#fff;
+border:2px solid #673ab7;
+border-radius:10px;
+outline:none;
+}
+
+button.show{
+width:100%;
+height:48px;
+margin-top:15px;
+border:none;
+border-radius:24px;
+background:#673ab7;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{
+    background:#673ab7;
+}
+
+/* EMPTY */
+
+.msg{
+text-align:center;
+padding:50px 10px;
+color:#bdbdbd;
+font-size:18px;
+}
 </style>
 </head>
 <body>
